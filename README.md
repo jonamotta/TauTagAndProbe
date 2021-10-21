@@ -1,42 +1,76 @@
 # TauTagAndProbe
 Set of tools to evaluate tau trigger performance on T&amp;P
 
-### Install instructions
-```
-cmsrel CMSSW_9_2_5_patch2
-cd CMSSW_9_2_5_patch2/src
+## Install instructions
+```bash
+cmsrel CMSSW_11_0_2
+cd CMSSW_11_0_2/src
 cmsenv
-git clone https://github.com/davignon/TauTagAndProbe
-scram b -j4
+git cms-init
+git remote add cms-l1t-offline git@github.com:cms-l1t-offline/cmssw.git
+git fetch cms-l1t-offline l1t-integration-CMSSW_11_0_2
+git cms-merge-topic -u cms-l1t-offline:l1t-integration-v104.5
+git cms-addpkg L1Trigger/L1TCommon
+git cms-addpkg L1Trigger/L1TMuon
+git clone https://github.com/cms-l1t-offline/L1Trigger-L1TMuon.git L1Trigger/L1TMuon/data
+git cms-addpkg L1Trigger/L1TCalorimeter
+git clone https://github.com/cms-l1t-offline/L1Trigger-L1TCalorimeter.git L1Trigger/L1TCalorimeter/data
+
+mkdir HiggsAnalysis
+cd HiggsAnalysis
+git clone git@github.com:bendavid/GBRLikelihood.git
+# modify the first line of `HiggsAnalysis/GBRLikelihood/BuildFile.xml` to have `-std=c++17`
+
+cd ..
+git clone https://github.com/davignon/TauTagAndProbe # package for the production of the starting NTuples
+
+git cms-checkdeps -A -a
+
+scram b -j 10
+
+git clone https://github.com/jonamotta/TauObjectsOptimization # package for the full optimization
 ```
 
-Run test.py to produce ntuples including offline taus + various online quantities
+L1T emulation relevant GlobalTags in `CMSSW_11_0_2` are:
+* for run2 data reprocessing `110X_dataRun2_v12`
+* for run2 mc `110X_mcRun2_asymptotic_v6`
+* for run3 mc `110X_mcRun3_2021_realistic_v6(9)`
 
-### Running on Monte Carlo for HLT
-Simply switch the flag isMC accordingly in test.py
-It is important to use T&P mu-tau selections as the efficiency is computed using the tau leg of the mu+tau paths.
 
-### Running on Monte Carlo for L1
+## Tool utilization
+To do the optimization two things are needed:
+* L1 objects (sometimes re-emulated) that are extracted from the RAW tier (in principle, non-re-emulated L1 objects can also be extracted from MiniAOD, but for consistency we never do that)
+* Offline objects that are extracted from the AOD or MiniAOD tier
+
+### Production of the input objects
+To produce the input NTuples to the optimization the `TauTagAndProbe` package is used. The useful scripts for this are mainly in the `test` subfolder.
+
+Jobs on RAW are submitted using `submitOnTier3_reEmulL1_zeroBias.py` which in turn launches `reEmulL1_X.py`
+Before launching this you need to fix
+* the Global Tag
+* the configuration of the L1Calorimeter (`process.load("L1Trigger.L1TCalorimeter.caloStage2Params_20XX_vX_X_XXX_cfi")`)
+
+
+Jobs on MiniAOD are submitted using `submitOnTier3.py` which in turn launches `test_noTagAndProbe.py`
+Before launching this you need to fix
+* the Global Tag
+
 For Monte Carlo (MC), we implemented a truth matching rather than a Tag & Probe technique which would dramatically and artificially decrease the available statistics.
-The MC-specific producers are in two parts:
 
-1. To get the unpacked L1 quantities and the reco information, use:
-```
-cmsRun test_noTagAndProbe_multipleTaus.py
-```
-This runs on MiniAOD and will write ntuples that are referred as "offline".
-A wrapper for this is: ```submitOnTier3_multipleTaus.py```, where you can specify the name of the dataset to run on, the global tag, etc.
+After having produced the input object `hadd` all the files.
 
-2. To re-emulate the L1 objects with a specific config, you have to run on RAW, and use:
-```
-cmsRun reEmulL1_MC_L1Only.py
-```
-The correspond wrapper is: ```submitOnTier3_reEmulL1_MC.py```, where you can specify the name of the dataset to run on, the global tag, etc. Also be mindful that you can specify the emulator version to be run in reEmulL1_MC_L1Only.py by specifying the correct:
-```
-process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2017_vX_X_XXX_cfi")
-```
+### Optimization
+The optimization is run in several sequential steps:
+* Merge of the two inputs, match of the L1 objects to the offline ones, compression of the variables
+* Calculation of the calibration, pruduction of its LUTs, and its application
+* Calculation of the isolation, pruduction of its LUTs, and its application
+* Prodution of turnon curves
+* Evaluation of the L1 rate
 
-### Ntuples content
+All of this steps for the optimization are done using this second tool: https://github.com/jonamotta/TauObjectsOptimization
+
+
+## Ntuples content
 The Ntuple produced that way contain basic tau offline quantities (kinematics, DM, various discriminators) + bits corresponding to various HLT triggers (tauTriggerBits variable) + L1-HLT specific variables (for expert user).
 
 The events stored pass basic mu+tauh T&P selections (OS requirement not applied for filter! isOS variable stored in Ntuple).
