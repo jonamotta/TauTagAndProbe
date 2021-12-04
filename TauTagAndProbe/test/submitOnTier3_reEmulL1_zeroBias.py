@@ -2,8 +2,8 @@ import os
 import json
 from subprocess import Popen, PIPE
 
-isMC = True
-#isMC = False
+#isMC = True
+isMC = False
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
@@ -31,9 +31,14 @@ def splitInBlocks (l, n):
 
 njobs = 200
 filedir="/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
-filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__GEN-SIM-RAW.txt")
 
-folder = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_RAW_2021_10_19"
+if not isMC:
+    filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/EphemeralZeroBias_2018D_Run323755"
+else:
+    filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__GEN-SIM-RAW.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_RAW_2021_10_19"
+
 
 JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"
 #JSONfile = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt"

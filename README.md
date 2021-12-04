@@ -45,15 +45,20 @@ To do the optimization two things are needed:
 ### Production of the input objects
 To produce the input NTuples to the optimization the `TauTagAndProbe` package is used. The useful scripts for this are mainly in the `test` subfolder.
 
-Jobs on RAW are submitted using `submitOnTier3_reEmulL1_zeroBias.py` which in turn launches `reEmulL1_X.py`
+Jobs on ***RAW*** are submitted using `submitOnTier3_reEmulL1_zeroBias.py` which in turn launches `reEmulL1_X.py`
 Before launching this you need to fix
 * the Global Tag
 * the configuration of the L1Calorimeter (`process.load("L1Trigger.L1TCalorimeter.caloStage2Params_20XX_vX_X_XXX_cfi")`)
 
-
-Jobs on MiniAOD are submitted using `submitOnTier3.py` which in turn launches `test_noTagAndProbe.py`
+Jobs on ***MiniAOD*** are submitted using `submitOnTier3.py` which in turn launches `test_noTagAndProbe.py`
 Before launching this you need to fix
 * the Global Tag
+
+Jobs on ***Data*** are submitted using `submitOnTier3_reEmulL1_zeroBias.py` which in turn launches `reEmulL1_X.py`.
+Before launching this you need to fix
+* the `isMC` flag
+* the input folder and file list
+The datasets that have to be used are among the ones listed here: https://twiki.cern.ch/twiki/bin/viewauth/CMS/TriggerStudiesChangesInDataTaking2018
 
 For Monte Carlo (MC), we implemented a truth matching rather than a Tag & Probe technique which would dramatically and artificially decrease the available statistics.
 
