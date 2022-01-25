@@ -46,7 +46,8 @@
 
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 
-
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+#include "FWCore/Utilities/interface/EDMException.h"
 
 //Set this variable to decide the number of triggers that you want to check simultaneously
 #define NUMBER_OF_MAXIMUM_TRIGGERS 64

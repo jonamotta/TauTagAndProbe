@@ -1,7 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-
-#print "Running on data or mc"
+print("Running on data or mc")
 
 HLTLIST = cms.VPSet(
     #MuTau SingleL1

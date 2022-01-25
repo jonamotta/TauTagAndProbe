@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-print "Running on MC"
+print("Running on MC")
 
 
 HLTLIST_TAG = cms.VPSet(
