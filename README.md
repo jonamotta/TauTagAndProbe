@@ -3,39 +3,28 @@ Set of tools to evaluate tau trigger performance on T&amp;P
 
 ## Install instructions
 ```bash
-cmsrel CMSSW_11_0_2
-cd CMSSW_11_0_2/src
+cmsrel CMSSW_12_0_2
+cd CMSSW_12_0_2/src
 cmsenv
 git cms-init
 git remote add cms-l1t-offline git@github.com:cms-l1t-offline/cmssw.git
-git fetch cms-l1t-offline l1t-integration-CMSSW_11_0_2
-git cms-merge-topic -u cms-l1t-offline:l1t-integration-v104.5
-git cms-addpkg L1Trigger/L1TCommon
-git cms-addpkg L1Trigger/L1TMuon
-git clone https://github.com/cms-l1t-offline/L1Trigger-L1TMuon.git L1Trigger/L1TMuon/data
-git cms-addpkg L1Trigger/L1TCalorimeter
+git fetch cms-l1t-offline l1t-integration-CMSSW_12_0_2
+git cms-merge-topic -u cms-l1t-offline:l1t-integration-v110.0
 git clone https://github.com/cms-l1t-offline/L1Trigger-L1TCalorimeter.git L1Trigger/L1TCalorimeter/data
 
-mkdir HiggsAnalysis
-cd HiggsAnalysis
-git clone git@github.com:bendavid/GBRLikelihood.git
-# modify the first line of `HiggsAnalysis/GBRLikelihood/BuildFile.xml` to have `-std=c++17`
-
 cd ..
-git clone https://github.com/davignon/TauTagAndProbe # package for the production of the starting NTuples
+git clone git@github.com:jonamotta/TauTagAndProbe.git -b CMSSW_12_0_2-l1t-integration-v110.0 # package for the production of the starting NTuples
 
 git cms-checkdeps -A -a
 
-scram b -j 10
-
-git clone https://github.com/jonamotta/TauObjectsOptimization # package for the full optimization
+scram b -j 12
 ```
 
-L1T emulation relevant GlobalTags in `CMSSW_11_0_2` are:
-* for run2 data reprocessing `110X_dataRun2_v12`
-* for run2 mc `110X_mcRun2_asymptotic_v6`
-* for run3 mc `110X_mcRun3_2021_realistic_v6(9)`
-
+L1T emulation relevant GlobalTags in CMSSW_12_0_2 are:
+* for run2 data reprocessing `120X_dataRun2_v2`
+* for run2 mc `120X_mcRun2_asymptotic_v2`
+* for run3 mc `120X_mcRun3_2021_realistic_v9`
+* for run3 (CRUZET) data `113X_dataRun3_Prompt_v3`
 
 ## Tool utilization
 To do the optimization two things are needed:
@@ -74,6 +63,7 @@ The optimization is run in several sequential steps:
 
 All of this steps for the optimization are done using this second tool: https://github.com/jonamotta/TauObjectsOptimization
 
+Due to the package's lack of forward-compatibility with CMSSW, the optimzation is run into CMSSW_11_0_2.
 
 ## Ntuples content
 The Ntuple produced that way contain basic tau offline quantities (kinematics, DM, various discriminators) + bits corresponding to various HLT triggers (tauTriggerBits variable) + L1-HLT specific variables (for expert user).
@@ -99,26 +89,3 @@ triggerNames->Scan("triggerNames","","colsize=100")
 The Row of the path correspond to the bit number in the tauTriggerBits variable.
 
 In the example presented here, the decision of the MediumChargedIsoPFTau20 leg can be checked for instance by requiring (tauTriggerBits>>2)&1 (matching with tag muon + offline tau of 0.5 included).
-
-
-### Plotting: mostly turn-ons
-Any basic check can be performed using those Ntuples (efficiency vs pT, eta-phi...) using custom code developed by the user.
-
-A more fancy package is available to produce turn-on plots with CB fits.
-
-For this, the Ntuples must first be converted using the script test/convertTreeForFitting.py (blame RooFit for not being able to deal with custom boolean cuts).
-
-The package for plotting is available in test/fitter/ (to be compiled with make).
-
-The CB fit can be run using a as an example test/fitter/hlt_turnOn_fitter.par (includes example for L1 and HLT turnons w/ subtraction of SS mu+tauh events to take into account contamination from fake taus using bkgSubW weight).
-
-To be launched with
-```
-./fit.exe run/hlt_turnOn_fitter.par
-```
-The "Michelangelo" turn-on plot can then be produced adapting the script test/fitter/results/plot_turnOn_Data_vs_MC.py
-
-### Resolutions:
-UNDER DEVELOPMENT
-
-
