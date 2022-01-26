@@ -2,8 +2,8 @@ import os
 import json
 from subprocess import Popen, PIPE
 
-#isMC = True
-isMC = False
+isMC = True
+#isMC = False
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
@@ -30,14 +30,19 @@ def splitInBlocks (l, n):
 ###########
 
 njobs = 200
-filedir="/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_0_2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 if not isMC:
     filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt")
-    folder = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/EphemeralZeroBias_2018D_Run323755"
+    folder = "/data_CMS/cms/motta/Run3preparation/2022_01_26_optimizationV6/EphemeralZeroBias_2018D_Run323755"
+    #filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323775.txt")
+    #folder = "/data_CMS/cms/motta/Run3preparation/2022_01_26_optimizationV6/EphemeralZeroBias_2018D_Run323775"
 else:
-    filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__GEN-SIM-RAW.txt")
-    folder = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_RAW_2021_10_19"
+    # 110X
+    #filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__GEN-SIM-RAW.txt")
+    # 120X
+    filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21DRPremix-120X_mcRun3_2021_realistic_v6-v2__GEN-SIM-DIGI-RAW.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/2022_01_26_optimizationV6/Run3_MC_VBFHToTauTau_M125_RAW_2022_01_26"
 
 
 JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"

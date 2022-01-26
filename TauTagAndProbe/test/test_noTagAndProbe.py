@@ -29,7 +29,8 @@ options.parseArguments()
 
 if not isMC:
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '110X_mcRun3_2021_realistic_v6'
+    #process.GlobalTag.globaltag = '110X_mcRun3_2021_realistic_v6'
+    process.GlobalTag.globaltag = '120X_mcRun3_2021_realistic_v6'
     process.load('TauTagAndProbe.TauTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -38,7 +39,8 @@ if not isMC:
         ),
     )
 else:
-    process.GlobalTag.globaltag = '110X_mcRun3_2021_realistic_v6'
+    #process.GlobalTag.globaltag = '110X_mcRun3_2021_realistic_v6'
+    process.GlobalTag.globaltag = '120X_mcRun3_2021_realistic_v6'
     process.load('TauTagAndProbe.TauTagAndProbe.MCanalysis_noTagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(

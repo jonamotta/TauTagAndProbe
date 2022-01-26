@@ -28,10 +28,13 @@ def splitInBlocks (l, n):
 ###########
 
 njobs = 200
-filedir="/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
-filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__MINIAODSIM.txt")
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_0_2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
+# 110X
+#filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__MINIAODSIM.txt")
+# 120X
+filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21MiniAOD-120X_mcRun3_2021_realistic_v5-v2__MINIAODSIM.txt")
 
-folder = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_MINIAOD_2021_10_19"
+folder = "/data_CMS/cms/motta/Run3preparation/2022_01_26_optimizationV6/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_01_26"
 
 JSONfile = "/home/llr/cms/davignon/json_NoL1T.txt"
 #JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"

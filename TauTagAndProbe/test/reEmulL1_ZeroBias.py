@@ -66,7 +66,8 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '110X_dataRun2_v12'
+    #process.GlobalTag.globaltag = '110X_dataRun2_v12'
+    process.GlobalTag.globaltag = '120X_mcRun3_2021_realistic_v6'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -77,7 +78,8 @@ if not isMC: # will use 80X
 
 else: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '110X_dataRun2_v12'
+    #process.GlobalTag.globaltag = '110X_dataRun2_v12'
+    process.GlobalTag.globaltag = '120X_mcRun3_2021_realistic_v6'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -103,8 +105,8 @@ else:
 
 
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_1_cfi") # latest in CMSSW_11_2_0
-process.load("L1Trigger.L1TCalorimeter.caloParams_2018_v1_4_cfi") # latest in CMSSW_11_0_2
-
+#process.load("L1Trigger.L1TCalorimeter.caloParams_2018_v1_4_cfi") # latest in CMSSW_11_0_2
+process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CMSSW_12_0_2
 
 #### handling of cms line options for tier3 submission
 #### the following are dummy defaults, so that one can normally use the config changing file list by hand etc.
