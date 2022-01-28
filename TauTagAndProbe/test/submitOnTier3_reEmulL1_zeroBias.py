@@ -33,11 +33,11 @@ njobs = 200
 filedir="/home/llr/cms/motta/Run3preparation/CMSSW_11_0_2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 if not isMC:
-    filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt")
-    folder = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/EphemeralZeroBias_2018D_Run323755"
+    filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323775.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323775"
 else:
     filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__GEN-SIM-RAW.txt")
-    folder = "/data_CMS/cms/motta/Run3preparation/2021_10_19_optimizationV0/Run3_MC_VBFHToTauTau_M125_RAW_2021_10_19"
+    folder = "/data_CMS/cms/motta/Run3preparation/2022_01_15_optimizationV3_calibThr1p7/Run3_MC_VBFHToTauTau_M125_RAW_2022_01_15"
 
 
 JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"
