@@ -50,7 +50,7 @@ else:
     )
 
 if options.JSONfile:
-    print "Using JSON: " , options.JSONfile
+    print("Using JSON: " , options.JSONfile)
     process.source.lumisToProcess = LumiList.LumiList(filename = options.JSONfile).getVLuminosityBlockRange()
 
 if options.inputFiles:

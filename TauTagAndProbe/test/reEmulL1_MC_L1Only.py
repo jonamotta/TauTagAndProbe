@@ -120,7 +120,7 @@ process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CM
 
 
 if options.JSONfile:
-    print "Using JSON: " , options.JSONfile
+    print("Using JSON: " , options.JSONfile)
     process.source.lumisToProcess = LumiList.LumiList(filename = options.JSONfile).getVLuminosityBlockRange()
 
 if options.inputFiles:

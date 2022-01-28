@@ -34,7 +34,7 @@ filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_0_2/src/TauTagAndProbe/Tau
 # 120X
 filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21MiniAOD-120X_mcRun3_2021_realistic_v5-v2__MINIAODSIM.txt")
 
-folder = "/data_CMS/cms/motta/Run3preparation/2022_01_26_optimizationV6/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_01_26"
+folder = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_01_28"
 
 JSONfile = "/home/llr/cms/davignon/json_NoL1T.txt"
 #JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"
@@ -46,7 +46,7 @@ os.system ('source /opt/exp_soft/cms/t3/t3setup')
 
 os.system('mkdir -p ' + folder)
 files = [f.strip() for f in filelist]
-print "Input has" , len(files) , "files" 
+print("Input has" , len(files) , "files")
 if njobs > len(files) : njobs = len(files)
 filelist.close()
 
@@ -81,5 +81,5 @@ for idx, block in enumerate(fileblocks):
     os.system ('chmod u+rwx ' + outJobName)
     command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
 #    command = ('/home/llr/cms/motta/t3submit -short -q cms \'' + outJobName +"\'")
-    print command
+    print(command)
     os.system (command)
