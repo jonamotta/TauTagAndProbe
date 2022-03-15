@@ -431,7 +431,7 @@ HLTLIST = cms.VPSet(
 )
 
 
-ZeroBias = cms.EDAnalyzer("ZeroBias",
+Run3nuMC = cms.EDAnalyzer("Run3nuMC",
     treeName = cms.string("ZeroBias"),
     L1Tau = cms.InputTag("caloStage2Digis", "Tau"),
     L1EmuTau = cms.InputTag("simCaloStage2Digis", "MP"),
@@ -464,7 +464,7 @@ ZeroBias = cms.EDAnalyzer("ZeroBias",
 
 
 NtupleZeroBiasSeq = cms.Sequence(
-    ZeroBias
+    Run3nuMC
 )
 
 

@@ -6,8 +6,6 @@ from Configuration.StandardSequences.Eras import eras
 isMC = True
 
 process = cms.Process("ZeroBias",eras.Run3)
-#process = cms.Process("ZeroBias",eras.Run2_2017)
-#process = cms.Process("ZeroBias",eras.Run2_2016)
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
@@ -19,30 +17,6 @@ process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.RawToDigi_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-
-#process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
-#process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
-#process.load('Configuration.StandardSequences.EndOfProcess_cff')
-#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-#process.load('Configuration.StandardSequences.Services_cff')
-#process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
-#process.load('FWCore.MessageService.MessageLogger_cfi')
-#process.load('Configuration.EventContent.EventContent_cff')
-#process.load('Configuration.Geometry.GeometryRecoDB_cff')
-##process.load('Configuration.Geometry.GeometryExtended2016Reco_cff')
-#process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
-
-#process.load('Configuration.StandardSequences.Services_cff')
-#process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
-#process.load('FWCore.MessageService.MessageLogger_cfi')
-#process.load('Configuration.EventContent.EventContent_cff')
-#process.load('SimGeneral.MixingModule.mixNoPU_cfi')
-#process.load('Configuration.Geometry.GeometryExtended2016Reco_cff')
-#process.load('Configuration.StandardSequences.MagneticField_cff')
-#process.load('Configuration.StandardSequences.RawToDigi_cff')
-#process.load('Configuration.StandardSequences.EndOfProcess_cff')
-#process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-
 
 
 options = VarParsing.VarParsing ('analysis')
@@ -57,6 +31,11 @@ options.register ('JSONfile',
                   VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                   VarParsing.VarParsing.varType.string,          # string, int, or float
                   "JSON file (empty for no JSON)")
+options.register ('isNU',
+                  0, # default value
+                  VarParsing.VarParsing.multiplicity.singleton, # singleton or list
+                  VarParsing.VarParsing.varType.int,          # string, int, or float
+                  "is it SingleNeutrino Run3MC?")
 options.outputFile = 'NTuple_ZeroBias.root'
 options.inputFiles = []
 options.maxEvents  = -999
@@ -65,29 +44,20 @@ options.parseArguments()
 
 import FWCore.Utilities.FileUtils as FileUtils
 
-if not isMC:
-    from Configuration.AlCa.autoCond import autoCond
-    #process.GlobalTag.globaltag = '110X_mcRun3_2021_realistic_v6'
+from Configuration.AlCa.autoCond import autoCond
+if options.isNU:
+    process.GlobalTag.globaltag = '120X_mcRun3_2021_realistic_v6'
+    process.load('TauTagAndProbe.TauTagAndProbe.Run3nuMC_cff')
+else:
     process.GlobalTag.globaltag = '120X_mcRun3_2021_realistic_v6'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
-    process.source = cms.Source("PoolSource",
-        fileNames = cms.untracked.vstring(
-            # dummy for creation
-            '/store/mc/Run3Winter20DRPremixMiniAOD/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v1/20000/2D4F0AC7-86ED-1F45-8E14-58D72D98667C.root'
-        ),
-    )
 
-else: # will use 80X
-    from Configuration.AlCa.autoCond import autoCond
-    #process.GlobalTag.globaltag = '110X_mcRun3_2021_realistic_v6'
-    process.GlobalTag.globaltag = '120X_mcRun3_2021_realistic_v6'
-    process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
-    process.source = cms.Source("PoolSource",
-        fileNames = cms.untracked.vstring(
-            # dummy for creation
-            '/store/mc/Run3Winter20DRPremixMiniAOD/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v1/20000/2D4F0AC7-86ED-1F45-8E14-58D72D98667C.root'
-        ),
-    )
+process.source = cms.Source("PoolSource",
+    fileNames = cms.untracked.vstring(
+        # dummy for creation
+        '/store/mc/Run3Winter20DRPremixMiniAOD/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v1/20000/2D4F0AC7-86ED-1F45-8E14-58D72D98667C.root'
+    ),
+)
 
 process.schedule = cms.Schedule()
 
@@ -97,8 +67,13 @@ if not isMC:
     from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAW 
     process = L1TReEmulFromRAW(process)
 else:
-    from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAW
-    process = L1TReEmulMCFromRAW(process)
+    ## re-emulate starting from RAW information (here we do not re-emulate also the TPs)
+    #from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAW
+    #process = L1TReEmulMCFromRAW(process)
+    
+    ## re-emulate starting from TPs (here we re-emulate also the TPs)
+    from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAWSimHcalTP
+    process = L1TReEmulMCFromRAWSimHcalTP(process)
 
     #from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFrom90xRAWSimHcalTP
     #process = L1TReEmulMCFrom90xRAWSimHcalTP(process)

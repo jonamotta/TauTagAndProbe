@@ -3,8 +3,8 @@ import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Config as cms
 process = cms.Process("TagAndProbe")
 
-#isMC = False
-isMC = True
+isMC = False
+#isMC = True
 #is2016 = True
 is2016 = False
 
@@ -30,67 +30,67 @@ options.maxEvents  = -999
 options.parseArguments()
 
 
-# START ELECTRON CUT BASED ID SECTION
-#
-# Set up everything that is needed to compute electron IDs and
-# add the ValueMaps with ID decisions into the event data stream
-#
+# # START ELECTRON CUT BASED ID SECTION
+# #
+# # Set up everything that is needed to compute electron IDs and
+# # add the ValueMaps with ID decisions into the event data stream
+# #
 
-# Load tools and function definitions
-from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
+# # Load tools and function definitions
+# from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
 
-process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
-
-
-#**********************
-dataFormat = DataFormat.MiniAOD
-switchOnVIDElectronIdProducer(process, dataFormat)
-#**********************
-
-process.load("RecoEgamma.ElectronIdentification.egmGsfElectronIDs_cfi")
-# overwrite a default parameter: for miniAOD, the collection name is a slimmed one
-process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag('slimmedElectrons')
-
-from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
-process.egmGsfElectronIDSequence = cms.Sequence(process.egmGsfElectronIDs)
-
-# Define which IDs we want to produce
-# Each of these two example IDs contains all four standard 
-my_id_modules =[
-'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',    # both 25 and 50 ns cutbased ids produced
-'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
-'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',                 # recommended for both 50 and 25 ns
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff', # will not be produced for 50 ns, triggering still to come
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',    # 25 ns trig
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',   #Spring16
-'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff',   #Spring16 HZZ
-
-] 
+# process.load("RecoEgamma.ElectronIdentification.ElectronMVAValueMapProducer_cfi")
 
 
-#Add them to the VID producer
-for idmod in my_id_modules:
-    setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
+# #**********************
+# dataFormat = DataFormat.MiniAOD
+# switchOnVIDElectronIdProducer(process, dataFormat)
+# #**********************
+
+# process.load("RecoEgamma.ElectronIdentification.egmGsfElectronIDs_cfi")
+# # overwrite a default parameter: for miniAOD, the collection name is a slimmed one
+# process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag('slimmedElectrons')
+
+# from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
+# process.egmGsfElectronIDSequence = cms.Sequence(process.egmGsfElectronIDs)
+
+# # Define which IDs we want to produce
+# # Each of these two example IDs contains all four standard 
+# my_id_modules =[
+# 'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',    # both 25 and 50 ns cutbased ids produced
+# 'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
+# 'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',                 # recommended for both 50 and 25 ns
+# 'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff', # will not be produced for 50 ns, triggering still to come
+# 'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',    # 25 ns trig
+# 'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
+# 'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',   #Spring16
+# 'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff',   #Spring16 HZZ
+
+# ] 
 
 
-egmMod = 'egmGsfElectronIDs'
-mvaMod = 'electronMVAValueMapProducer'
-regMod = 'electronRegressionValueMapProducer'
-egmSeq = 'egmGsfElectronIDSequence'
-setattr(process,egmMod,process.egmGsfElectronIDs.clone())
-setattr(process,mvaMod,process.electronMVAValueMapProducer.clone())
-setattr(process,regMod,process.electronRegressionValueMapProducer.clone())
-setattr(process,egmSeq,cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)*getattr(process,regMod)))
-process.electrons = cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)*getattr(process,regMod))
+# #Add them to the VID producer
+# for idmod in my_id_modules:
+#     setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
 
 
+# egmMod = 'egmGsfElectronIDs'
+# mvaMod = 'electronMVAValueMapProducer'
+# regMod = 'electronRegressionValueMapProducer'
+# egmSeq = 'egmGsfElectronIDSequence'
+# setattr(process,egmMod,process.egmGsfElectronIDs.clone())
+# setattr(process,mvaMod,process.electronMVAValueMapProducer.clone())
+# setattr(process,regMod,process.electronRegressionValueMapProducer.clone())
+# setattr(process,egmSeq,cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)*getattr(process,regMod)))
+# process.electrons = cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)*getattr(process,regMod))
 
 
 
-if not isMC: # will use 80X
+
+
+if not isMC:
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v8'
+    process.GlobalTag.globaltag = '120X_dataRun2_v2'
     process.load('TauTagAndProbe.TauTagAndProbe.tagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -98,9 +98,7 @@ if not isMC: # will use 80X
         ),
     )
 else:
-    process.GlobalTag.globaltag = '92X_upgrade2017_TSG_For90XSamples_V2' #MC 25 ns miniAODv2
-    #process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2' #MC 25 ns miniAODv2
-    # process.GlobalTag.globaltag = '76X_dataRun2_16Dec2015_v0'
+    process.GlobalTag.globaltag = '120X_dataRun2_v2'
     process.load('TauTagAndProbe.TauTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(            
@@ -112,9 +110,10 @@ else:
 if is2016 and not isMC:
     process.patTriggerUnpacker.patTriggerObjectsStandAlone = cms.InputTag("selectedPatTrigger","","RECO")
 
+process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CMSSW_12_0_2
 
 if options.JSONfile:
-    print "Using JSON: " , options.JSONfile
+    print("Using JSON: " , options.JSONfile)
     process.source.lumisToProcess = LumiList.LumiList(filename = options.JSONfile).getVLuminosityBlockRange()
 
 if options.inputFiles:

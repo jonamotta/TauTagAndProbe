@@ -66,7 +66,6 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    #process.GlobalTag.globaltag = '110X_dataRun2_v12'
     process.GlobalTag.globaltag = '120X_dataRun2_v2'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
@@ -78,7 +77,6 @@ if not isMC: # will use 80X
 
 else: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    #process.GlobalTag.globaltag = '110X_dataRun2_v12'
     process.GlobalTag.globaltag = '120X_dataRun2_v2'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
@@ -96,12 +94,20 @@ if not isMC:
     from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAW 
     process = L1TReEmulFromRAW(process)
 else:
-    from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAW
-    process = L1TReEmulMCFromRAW(process) 
+    ## re-emulate starting from RAW information (here we do not re-emulate also the TPs)
+    #from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAW
+    #process = L1TReEmulMCFromRAW(process)
+    
+    ## re-emulate starting from TPs (here we re-emulate also the TPs)
+    from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAWSimHcalTP
+    process = L1TReEmulMCFromRAWSimHcalTP(process)
+
     from L1Trigger.Configuration.customiseUtils import L1TTurnOffUnpackStage2GtGmtAndCalo 
     process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
     #from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAWsimTP
     #process = L1TReEmulFromRAWsimTP(process)
+
+
 
 
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_1_cfi") # latest in CMSSW_11_2_0

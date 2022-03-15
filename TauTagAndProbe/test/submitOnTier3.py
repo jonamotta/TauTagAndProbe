@@ -27,16 +27,33 @@ def splitInBlocks (l, n):
 
 ###########
 
-njobs = 200
+njobs = 150
 filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_0_2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
-# 110X
-#filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__MINIAODSIM.txt")
-# 120X
-filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21MiniAOD-120X_mcRun3_2021_realistic_v5-v2__MINIAODSIM.txt")
 
-folder = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_01_28"
+# 100X signal RunII MC
+filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIISpring18MiniAOD-NZSPU28to70_100X_upgrade2018_realistic_v10-v1_MINIAODSIM.txt")
+folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run2_MC_VBFHToTauTau_M125_MINIAOD100X_2022_02_28"
 
-JSONfile = "/home/llr/cms/davignon/json_NoL1T.txt"
+# 102X signal RunII MC
+#filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v1__MINIAODSIM.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run2_MC_VBFHToTauTau_M125_MINIAOD102X_2022_02_28"
+
+# 120X signal Run3 MC
+#filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21MiniAOD-120X_mcRun3_2021_realistic_v5-v2__MINIAODSIM.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_02_28"
+
+# EphemeralZeroBias data
+#filelist = open(filedir+"/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323755.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323755"
+#filelist = open(filedir+"/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323775.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323775"
+
+# SingleMuon data
+#filelist = open(filedir+"/Run323775__Run2018D__SingleMuon__MINIAOD__UL2018_MiniAODv2-v3.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/SingleMuon_2018D_Run323775_MINIAOD_UL2018v2"
+
+
+#JSONfile = "/home/llr/cms/davignon/json_NoL1T.txt"
 #JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"
 #/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
 
@@ -63,7 +80,8 @@ for idx, block in enumerate(fileblocks):
     jobfilelist.close()
 
     if not isMC:
-        cmsRun = "cmsRun test.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
+        cmsRun = "cmsRun test.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
+        #cmsRun = "cmsRun test.py maxEvents=200 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
     else:
         cmsRun = "cmsRun test_noTagAndProbe.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName        
 
@@ -80,6 +98,6 @@ for idx, block in enumerate(fileblocks):
 
     os.system ('chmod u+rwx ' + outJobName)
     command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
-#    command = ('/home/llr/cms/motta/t3submit -short -q cms \'' + outJobName +"\'")
+    #command = ('/home/llr/cms/motta/t3submit -short -q cms \'' + outJobName +"\'")
     print(command)
     os.system (command)

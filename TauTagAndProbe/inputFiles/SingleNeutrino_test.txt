@@ -1,0 +1,11 @@
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_E10-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/70001/c5a11dcc-e9d4-4acd-80ea-34e987f4b23c.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_E10-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/70001/4f7d9b28-919d-4e34-8062-5bf46b9fc42c.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_E10-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/70001/1db23a29-a1a8-4ac3-929f-9787bcf3cb03.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_E10-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/70001/9d70f2dd-e8c2-4122-9da4-0f0936731fbd.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_E10-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/70001/e41c3e4f-bb96-4e9b-8f74-7fd67cd1931b.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/120000/11526747-2961-4a04-bd19-97ab25d4d3bc.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/120000/4fbafc84-aabd-4289-8a8a-d006b9ec04bc.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/120000/57cf529d-7813-48a0-9232-a1dd1663b307.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/120000/c9bdb30c-4518-4f96-a56d-1994e8432c75.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/120000/20c49ebd-e0b6-4eb0-9b10-e17d856d9c3d.root
+/store/mc/Run3Winter21DRMiniAOD/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2/120000/16f3e88d-ccca-4487-bb51-ed277e2b9853.root

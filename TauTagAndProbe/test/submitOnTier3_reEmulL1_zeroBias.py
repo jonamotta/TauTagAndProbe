@@ -2,8 +2,10 @@ import os
 import json
 from subprocess import Popen, PIPE
 
-#isMC = True
-isMC = False
+isMC = True
+#isMC = False
+
+isNU = False
 
 def chunks(l, n):
     """Yield successive n-sized chunks from l."""
@@ -29,21 +31,29 @@ def splitInBlocks (l, n):
 
 ###########
 
-njobs = 200
+njobs = 2600 # 150
 filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_0_2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 if not isMC:
-    #filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt")
-    #folder = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6/EphemeralZeroBias_2018D_Run323755"
-    filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323775.txt")
-    folder = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6/EphemeralZeroBias_2018D_Run323775"
-else:
-    # 110X
-    #filelist = open(filedir+"/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8__Run3Winter20DRPremixMiniAOD-110X_mcRun3_2021_realistic_v6-v1__GEN-SIM-RAW.txt")
-    # 120X
-    filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21DRPremix-120X_mcRun3_2021_realistic_v6-v2__GEN-SIM-DIGI-RAW.txt")
-    folder = "/data_CMS/cms/motta/Run3preparation/2022_01_28_optimizationV6/Run3_MC_VBFHToTauTau_M125_RAW_2022_01_28"
+    filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755_reEmuTPs"
+    #filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323775.txt")
+    #folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323775_reEmuTPs"
 
+else:
+    # 120X signal Run3 MC
+    #filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21DRPremix-120X_mcRun3_2021_realistic_v6-v2__GEN-SIM-DIGI-RAW.txt")
+    #folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run3_MC_VBFHToTauTau_M125_RAW_2022_02_28"
+
+    # 112X Neutrino
+    #filelist = open(filedir+"/SingleNeutrino_Pt-2To20-gun__Run3Winter21DRMiniAOD-FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2__GEN-SIM-DIGI-RAW.txt")
+    #folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run3_MC_SingleNeutrinoGun_RAW112X_2022_02_28"
+    #isNU = True
+
+    # 120X Neutrino
+    filelist = open(filedir+"/SingleNeutrino_Pt-2To20-gun__Run3Summer21DRPremix-SNB_120X_mcRun3_2021_realistic_v6-v2__GEN-SIM-DIGI-RAW.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run3_MC_SingleNeutrinoGun_RAW120X_2022_02_28"
+    isNU = True
 
 JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"
 #JSONfile = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt"
@@ -78,8 +88,9 @@ for idx, block in enumerate(fileblocks):
         cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
         #cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
     else:
-        cmsRun = "cmsRun reEmulL1_MC_L1Only.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
-
+        if not isNU: cmsRun = "cmsRun reEmulL1_MC_L1Only.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " isNU=0 >& " + outLogName
+        else:        cmsRun = "cmsRun reEmulL1_MC_L1Only.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " isNU=1 >& " + outLogName
+    
     skimjob = open (outJobName, 'w')
     skimjob.write ('#!/bin/bash\n')
     skimjob.write ('export X509_USER_PROXY=~/.t3/proxy.cert\n')
