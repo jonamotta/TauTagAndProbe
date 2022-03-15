@@ -3,28 +3,27 @@ Set of tools to evaluate tau trigger performance on T&amp;P
 
 ## Install instructions
 ```bash
-cmsrel CMSSW_12_0_2
-cd CMSSW_12_0_2/src
+cmsrel CMSSW_12_3_0_pre1
+cd CMSSW_12_3_0_pre1/src
 cmsenv
 git cms-init
 git remote add cms-l1t-offline git@github.com:cms-l1t-offline/cmssw.git
-git fetch cms-l1t-offline l1t-integration-CMSSW_12_0_2
-git cms-merge-topic -u cms-l1t-offline:l1t-integration-v110.0
+git fetch cms-l1t-offline l1t-integration-CMSSW_12_3_0
+git cms-merge-topic -u cms-l1t-offline:l1t-integration-v121.0
 git clone https://github.com/cms-l1t-offline/L1Trigger-L1TCalorimeter.git L1Trigger/L1TCalorimeter/data
 
-cd ..
-git clone git@github.com:jonamotta/TauTagAndProbe.git -b CMSSW_12_0_2-l1t-integration-v110.0 # package for the production of the starting NTuples
+git clone git@github.com:jonamotta/TauTagAndProbe.git -b CMSSW_12_3_0_pre1-l1t-integration-v121.0 # package for the production of the starting NTuples
 
 git cms-checkdeps -A -a
 
 scram b -j 12
 ```
 
-L1T emulation relevant GlobalTags in CMSSW_12_0_2 are:
-* for run2 data reprocessing `120X_dataRun2_v2`
-* for run2 mc `120X_mcRun2_asymptotic_v2`
-* for run3 mc `120X_mcRun3_2021_realistic_v9`
-* for run3 (CRUZET) data `113X_dataRun3_Prompt_v3`
+L1T emulation relevant GlobalTags in CMSSW_12_3_0 are:
+* for run2 data reprocessing `123X_dataRun2_v1`
+* for run2 mc `123X_mcRun2_asymptotic_v1`
+* for run3 mc `123X_mcRun3_2021_realistic_v5`
+* for run3 (CRUZET) data `123X_dataRun3_Prompt_v1`
 
 ## Tool utilization
 To do the optimization two things are needed:

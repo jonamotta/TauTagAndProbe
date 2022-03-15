@@ -66,7 +66,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '120X_dataRun2_v2'
+    process.GlobalTag.globaltag = '123X_dataRun2_v1'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -77,7 +77,7 @@ if not isMC: # will use 80X
 
 else: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '120X_dataRun2_v2'
+    process.GlobalTag.globaltag = '123X_dataRun2_v1'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -107,12 +107,65 @@ else:
     #from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAWsimTP
     #process = L1TReEmulFromRAWsimTP(process)
 
-
-
-
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_1_cfi") # latest in CMSSW_11_2_0
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2018_v1_4_cfi") # latest in CMSSW_11_0_2
-process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CMSSW_12_0_2
+#process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CMSSW_12_0_2
+process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi") # latest in CMSSW_12_3_0_pre1
+
+############################
+# PFA1' Filter
+# --> HCAL pu mitigation
+
+process.load("SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff")
+
+process.simHcalTriggerPrimitiveDigis.overrideDBweightsAndFilterHB = cms.bool(True)
+process.simHcalTriggerPrimitiveDigis.overrideDBweightsAndFilterHE = cms.bool(True)
+
+process.HcalTPGCoderULUT.overrideDBweightsAndFilterHB = cms.bool(True)
+process.HcalTPGCoderULUT.overrideDBweightsAndFilterHE = cms.bool(True)
+
+process.simHcalTriggerPrimitiveDigis.numberOfFilterPresamplesHBQIE11 = 1
+process.simHcalTriggerPrimitiveDigis.numberOfFilterPresamplesHEQIE11 = 1
+process.simHcalTriggerPrimitiveDigis.weightsQIE11 = {
+    "ieta1" :  [-0.47, 1.0],
+    "ieta2" :  [-0.47, 1.0],
+    "ieta3" :  [-0.47, 1.0],
+    "ieta4" :  [-0.47, 1.0],
+    "ieta5" :  [-0.47, 1.0],
+    "ieta6" :  [-0.47, 1.0],
+    "ieta7" :  [-0.47, 1.0],
+    "ieta8" :  [-0.47, 1.0],
+    "ieta9" :  [-0.47, 1.0],
+    "ieta10" : [-0.47, 1.0],
+    "ieta11" : [-0.47, 1.0],
+    "ieta12" : [-0.47, 1.0],
+    "ieta13" : [-0.47, 1.0],
+    "ieta14" : [-0.47, 1.0],
+    "ieta15" : [-0.47, 1.0],
+    "ieta16" : [-0.47, 1.0],
+    "ieta17" : [-0.47, 1.0],
+    "ieta18" : [-0.47, 1.0],
+    "ieta19" : [-0.47, 1.0],
+    "ieta20" : [-0.47, 1.0],
+    "ieta21" : [-0.43, 1.0],
+    "ieta22" : [-0.43, 1.0],
+    "ieta23" : [-0.43, 1.0],
+    "ieta24" : [-0.43, 1.0],
+    "ieta25" : [-0.43, 1.0],
+    "ieta26" : [-0.43, 1.0],
+    "ieta27" : [-0.43, 1.0],
+    "ieta28" : [-0.43, 1.0]
+}
+
+process.HcalTPGCoderULUT.contain1TSHB = True
+process.HcalTPGCoderULUT.contain1TSHE = True
+
+process.HcalTPGCoderULUT.containPhaseNSHB = 0.0 # For Run2 2018 Data
+process.HcalTPGCoderULUT.containPhaseNSHE = 0.0 # For Run2 2018 Data
+
+############################
+
+
 
 #### handling of cms line options for tier3 submission
 #### the following are dummy defaults, so that one can normally use the config changing file list by hand etc.
