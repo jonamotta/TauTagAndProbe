@@ -31,16 +31,16 @@ njobs = 150
 filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_3_0_pre1/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 # 100X signal RunII MC
-filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIISpring18MiniAOD-NZSPU28to70_100X_upgrade2018_realistic_v10-v1_MINIAODSIM.txt")
-folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run2_MC_VBFHToTauTau_M125_MINIAOD100X_2022_02_28"
+#filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIISpring18MiniAOD-NZSPU28to70_100X_upgrade2018_realistic_v10-v1_MINIAODSIM.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run2_MC_VBFHToTauTau_M125_MINIAOD100X_2022_03_15"
 
 # 102X signal RunII MC
-#filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v1__MINIAODSIM.txt")
-#folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run2_MC_VBFHToTauTau_M125_MINIAOD102X_2022_02_28"
+filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v1__MINIAODSIM.txt")
+folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run2_MC_VBFHToTauTau_M125_MINIAOD102X_2022_03_15"
 
 # 120X signal Run3 MC
 #filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21MiniAOD-120X_mcRun3_2021_realistic_v5-v2__MINIAODSIM.txt")
-#folder = "/data_CMS/cms/motta/Run3preparation/2022_02_28_optimizationV9/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_02_28"
+#folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_03_15"
 
 # EphemeralZeroBias data
 #filelist = open(filedir+"/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323755.txt")
