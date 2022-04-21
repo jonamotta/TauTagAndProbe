@@ -39,8 +39,8 @@ if not isMC:
     )
 else:
     #process.GlobalTag.globaltag = '100X_upgrade2018_realistic_v10'
-    process.GlobalTag.globaltag = '102X_upgrade2018_realistic_v15'
-    #process.GlobalTag.globaltag = '123X_mcRun3_2021_realistic_v5'
+    #process.GlobalTag.globaltag = '102X_upgrade2018_realistic_v15'
+    process.GlobalTag.globaltag = '123X_mcRun3_2021_realistic_v13'
     process.load('TauTagAndProbe.TauTagAndProbe.MCanalysis_noTagAndProbe_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
