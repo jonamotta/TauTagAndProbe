@@ -459,7 +459,14 @@ Run3nuMC = cms.EDAnalyzer("Run3nuMC",
     PFJetRegionCollection = cms.InputTag("hltTauPFJets08RegionReg", "jets", "MYHLT"),
     PFJetChargedHadronAssociation = cms.InputTag("hltTauPFJetsRecoTauChargedHadronsReg", "", "MYHLT"),
     JetPiZeroAssociation = cms.InputTag("hltPFTauPiZerosReg", "", "MYHLT"),
-    PuSummaryInfo = cms.InputTag("addPileupInfo")
+    PuSummaryInfo = cms.InputTag("addPileupInfo"),
+    genCollection = cms.InputTag("generator"),
+    genJetCollection = cms.InputTag("ak4GenJets"),
+    genParticleCollection = cms.InputTag("genParticles"),
+    ecalToken = cms.InputTag("simEcalTriggerPrimitiveDigis"),
+    hcalToken = cms.InputTag("simHcalTriggerPrimitiveDigis"),
+    l1TowerToken = cms.InputTag("simCaloStage2Layer1Digis"),
+    l1ClusterToken = cms.InputTag("simCaloStage2Digis", "MP")
 )
 
 

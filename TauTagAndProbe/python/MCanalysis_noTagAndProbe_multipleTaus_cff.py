@@ -52,7 +52,7 @@ goodTaus = cms.EDFilter("PATTauRefSelector",
                 '&& tauID("againstMuonTight3") > 0.5 ' # anti Muon tight
                 '&& tauID("againstElectronVLooseMVA6") > 0.5 ' # anti-Ele loose
         ),
-        filter = cms.bool(True)
+        filter = cms.bool(False)
 )
 
 genMatchedTaus = cms.EDFilter("genMatchTauFilter",
@@ -63,6 +63,8 @@ genMatchedTaus = cms.EDFilter("genMatchTauFilter",
 Ntuplizer_noTagAndProbe_multipleTaus = cms.EDAnalyzer("Ntuplizer_noTagAndProbe_multipleTaus",
     treeName = cms.string("TagAndProbe"),
     genCollection = cms.InputTag("generator"),
+    genJetCollection = cms.InputTag("slimmedGenJets"),
+    genParticleCollection = cms.InputTag("prunedGenParticles"),
     taus  = cms.InputTag("genMatchedTaus"),
     triggerSet = cms.InputTag("selectedPatTrigger"),
     triggerResultsLabel = cms.InputTag("TriggerResults", "", "HLT"),
@@ -75,6 +77,7 @@ Ntuplizer_noTagAndProbe_multipleTaus = cms.EDAnalyzer("Ntuplizer_noTagAndProbe_m
     L1Tau = cms.InputTag("caloStage2Digis", "Tau", "RECO"),
     L1EmuTau = cms.InputTag("simCaloStage2Digis", "MP"),
     jetCollection = cms.InputTag("slimmedJets"),
+    metCollection = cms.InputTag("slimmedMETs"),
     l1tJetCollection = cms.InputTag("caloStage2Digis","Jet"),
     Vertexes = cms.InputTag("offlineSlimmedPrimaryVertices"),
     triggerList = HLTLIST,

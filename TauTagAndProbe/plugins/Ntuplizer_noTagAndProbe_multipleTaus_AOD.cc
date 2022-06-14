@@ -80,7 +80,7 @@ private:
   virtual void endRun(edm::Run const&, edm::EventSetup const&);
   void Initialize();
   bool hasFilters(const pat::TriggerObjectStandAlone&  obj , const std::vector<std::string>& filtersToLookFor);
-  int FillJet(const edm::View<reco::Jet> *jets, const edm::Event& event, JetCorrectionUncertainty* jecUnc);  
+  int FillJet(const edm::View<reco::Jet> *jets, const edm::Event& event);
   // int FillJet(const edm::View<pat::Jet> *jets, const edm::Event& event, JetCorrectionUncertainty* jecUnc);  
 
   TTree *_tree;
@@ -536,11 +536,12 @@ void Ntuplizer_noTagAndProbe_multipleTaus_AOD::analyze(const edm::Event& iEvent,
   this -> _tauTriggerBits = this -> _tauTriggerBitSet.to_ulong();
 
   const edm::View<reco::Jet>* jets = jetHandle.product();
-  edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
-  eSetup.get<JetCorrectionsRecord>().get("AK4PFchs",JetCorParColl); 
-  JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
-  JetCorrectionUncertainty jecUnc (JetCorPar);
-  _numberOfJets = FillJet(jets,iEvent, &jecUnc);
+  //edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
+  //eSetup.get<JetCorrectionsRecord>().get("AK4PFchs",JetCorParColl); 
+  //JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
+  //JetCorrectionUncertainty jecUnc (JetCorPar);
+  _numberOfJets = FillJet(jets,iEvent);
+  // _numberOfJets = FillJet(jets,iEvent, &jecUnc);
 
 
   this -> _tree -> Fill();
@@ -567,7 +568,8 @@ bool Ntuplizer_noTagAndProbe_multipleTaus_AOD::hasFilters(const pat::TriggerObje
   return true;
 }
 
-int Ntuplizer_noTagAndProbe_multipleTaus_AOD::FillJet(const edm::View<reco::Jet> *jets, const edm::Event& event, JetCorrectionUncertainty* jecUnc){
+int Ntuplizer_noTagAndProbe_multipleTaus_AOD::FillJet(const edm::View<reco::Jet> *jets, const edm::Event& event){
+// int Ntuplizer_noTagAndProbe_multipleTaus_AOD::FillJet(const edm::View<reco::Jet> *jets, const edm::Event& event, JetCorrectionUncertainty* jecUnc){
   int nJets=0;
   vector <pair<float, int>> softLeptInJet; // pt, idx
   for(edm::View<reco::Jet>::const_iterator ijet = jets->begin(); ijet!=jets->end();++ijet){
@@ -714,9 +716,9 @@ int Ntuplizer_noTagAndProbe_multipleTaus_AOD::FillJet(const edm::View<reco::Jet>
     //cout << "     --> sum pt, eta, phi: " << vSum.Pt() << " " << vSum.Eta() << " " << vSum.Phi() << endl;
     //if (abs(ijet->hadronFlavour()) == 5 ) cout << "     ------------ THIS WAS A B JET ------------" << endl;
     //cout << "RAW pt: " << jetRawPt << " | " << jetRawPt2 << " --> " << vSum.Pt() << endl;
-    jecUnc->setJetEta(ijet->eta());
-    jecUnc->setJetPt(ijet->pt()); // here you must use the CORRECTED jet pt
-    _jets_jecUnc.push_back(jecUnc->getUncertainty(true));
+    // jecUnc->setJetEta(ijet->eta());
+    // jecUnc->setJetPt(ijet->pt()); // here you must use the CORRECTED jet pt
+    // _jets_jecUnc.push_back(jecUnc->getUncertainty(true));
   }
 
   return nJets;

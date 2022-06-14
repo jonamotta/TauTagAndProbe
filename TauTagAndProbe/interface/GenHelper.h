@@ -13,7 +13,7 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 
-#include <DataFormats/HepMCCandidate/interface/GenParticle.h>
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include <vector>
 
 namespace genhelper {

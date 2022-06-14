@@ -50,6 +50,21 @@
 #include "FWCore/Utilities/interface/EDMException.h"
 
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+
+#include "CalibFormats/CaloTPG/interface/CaloTPGTranscoder.h"
+#include "CalibFormats/CaloTPG/interface/CaloTPGRecord.h"
+
+#include "L1Trigger/L1TNtuples/interface/L1AnalysisCaloTPDataFormat.h"
+#include "L1Trigger/L1TNtuples/interface/L1AnalysisL1CaloTowerDataFormat.h"
+#include "L1Trigger/L1TNtuples/interface/L1AnalysisL1CaloClusterDataFormat.h"
+
+#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
+#include "DataFormats/HcalDigi/interface/HcalDigiCollections.h"
+
+#include "DataFormats/L1TCalorimeter/interface/CaloTower.h"
+#include "DataFormats/L1TCalorimeter/interface/CaloCluster.h"
+
 
 //Set this variable to decide the number of triggers that you want to check simultaneously
 #define NUMBER_OF_MAXIMUM_TRIGGERS 64
@@ -90,6 +105,8 @@ private:
   ULong64_t       _indexevents;
   Int_t           _runNumber;
   Int_t           _lumi;
+  float _MC_weight;
+
   unsigned long _EventTriggerBits;
 
   Int_t _nTruePU;
@@ -253,6 +270,51 @@ private:
   std::vector<float> _hltPFTau35TrackPt1Reg_Eta;
   std::vector<float> _hltPFTau35TrackPt1Reg_Phi;
 
+  std::vector<Float_t> _genJet_pt;
+  std::vector<Float_t> _genJet_eta;
+  std::vector<Float_t> _genJet_phi;
+  std::vector<Float_t> _genJet_emEnergy;
+  std::vector<Float_t> _genJet_hadEnergy;
+  std::vector<Float_t> _genJet_invisibleEnergy;
+  std::vector<Float_t> _genJet_muonEnergy;
+
+  std::vector<Int_t> _genPart_id;
+  std::vector<Int_t> _genPart_stat;
+  std::vector<Int_t> _genPart_parent;
+  std::vector<Float_t> _genPart_pt;
+  std::vector<Float_t> _genPart_eta;
+  std::vector<Float_t> _genPart_phi;
+  std::vector<Float_t> _genPart_E;
+  std::vector<Int_t> _genPart_ch;
+
+  short _nHCALTP;
+  std::vector<short> _hcalTPieta;
+  std::vector<short> _hcalTPiphi;
+  std::vector<short> _hcalTPCaliphi;
+  std::vector<float> _hcalTPet;
+  std::vector<short> _hcalTPcompEt;
+  std::vector<short> _hcalTPfineGrain;
+
+  short _nECALTP;
+  std::vector<short> _ecalTPieta;
+  std::vector<short> _ecalTPiphi;
+  std::vector<short> _ecalTPCaliphi;
+  std::vector<float> _ecalTPet;
+  std::vector<short> _ecalTPcompEt;
+  std::vector<short> _ecalTPfineGrain;
+
+  short _nTower;
+  std::vector<short> _TT_ieta;
+  std::vector<short> _TT_iphi;
+  std::vector<short> _TT_iet;
+  std::vector<short> _TT_iem;
+  std::vector<short> _TT_ihad;
+  std::vector<short> _TT_iratio;
+  std::vector<short> _TT_iqual;
+  std::vector<float> _TT_et;
+  std::vector<float> _TT_eta;
+  std::vector<float> _TT_phi;
+
   edm::EDGetTokenT<l1t::TauBxCollection> _L1TauTag  ;
   edm::EDGetTokenT<l1t::TauBxCollection> _L1EmuTauTag  ;
   edm::EDGetTokenT<l1t::JetBxCollection> _l1tJetTag;
@@ -281,6 +343,17 @@ private:
   edm::EDGetTokenT<reco::JetPiZeroAssociation> _piZero_token;
 
   edm::EDGetTokenT<std::vector<PileupSummaryInfo>> _truePUTag;
+
+  edm::EDGetTokenT<GenEventInfoProduct> _genTag;
+  edm::EDGetTokenT<reco::GenJetCollection> _genJetTag;
+  edm::EDGetTokenT<reco::GenParticleCollection> _genParticleTag;
+
+  edm::EDGetTokenT<EcalTrigPrimDigiCollection> _ecalTag;
+  edm::EDGetTokenT<HcalTrigPrimDigiCollection> _hcalTag;
+  edm::EDGetTokenT<l1t::CaloTowerBxCollection> _l1TowerTag;
+  edm::EDGetTokenT<l1t::CaloClusterBxCollection> _l1ClusterTag;
+
+  const edm::ESGetToken<CaloTPGTranscoder, CaloTPGRecord> decoderToken_;
 
   //!Contains the parameters
   tVParameterSet _parameters;
@@ -329,7 +402,15 @@ Run3nuMC::Run3nuMC(const edm::ParameterSet& iConfig) :
   _hltPFJetRegion_Tag(consumes<edm::Association<reco::PFJetCollection> >(iConfig.getParameter<edm::InputTag>("PFJetRegionCollection"))),
   _chargedHadron_token(consumes<reco::PFJetChargedHadronAssociation>(iConfig.getParameter<edm::InputTag>("PFJetChargedHadronAssociation"))),
   _piZero_token(consumes<reco::JetPiZeroAssociation>(iConfig.getParameter<edm::InputTag>("JetPiZeroAssociation"))),
-  _truePUTag(consumes<std::vector<PileupSummaryInfo>>(iConfig.getParameter<edm::InputTag>("PuSummaryInfo")))
+  _truePUTag(consumes<std::vector<PileupSummaryInfo>>(iConfig.getParameter<edm::InputTag>("PuSummaryInfo"))),
+  _genTag         (consumes<GenEventInfoProduct>                    (iConfig.getParameter<edm::InputTag>("genCollection"))),
+  _genJetTag      (consumes<reco::GenJetCollection>                 (iConfig.getParameter<edm::InputTag>("genJetCollection"))),
+  _genParticleTag (consumes<reco::GenParticleCollection>            (iConfig.getParameter<edm::InputTag>("genParticleCollection"))),
+  _ecalTag        (consumes<EcalTrigPrimDigiCollection>             (iConfig.getParameter<edm::InputTag>("ecalToken"))),
+  _hcalTag        (consumes<HcalTrigPrimDigiCollection>             (iConfig.getParameter<edm::InputTag>("hcalToken"))),
+  _l1TowerTag     (consumes<l1t::CaloTowerBxCollection>             (iConfig.getParameter<edm::InputTag>("l1TowerToken"))),
+  _l1ClusterTag   (consumes<l1t::CaloClusterBxCollection>             (iConfig.getParameter<edm::InputTag>("l1ClusterToken"))),
+  decoderToken_(esConsumes<CaloTPGTranscoder, CaloTPGRecord>())
 {
   this -> _treeName = iConfig.getParameter<std::string>("treeName");
   this -> _processName = iConfig.getParameter<edm::InputTag>("triggerResultsLabel");
@@ -420,6 +501,8 @@ void Run3nuMC::Initialize() {
   this -> _indexevents = 0;
   this -> _runNumber = 0;
   this -> _lumi = 0;
+
+  this -> _MC_weight = 1;
 
   this -> _nTruePU = 0;
   this -> _Run3RateWeight = 0;
@@ -581,6 +664,51 @@ void Run3nuMC::Initialize() {
   this -> _hltPFTau35TrackPt1Reg_Pt.clear();
   this -> _hltPFTau35TrackPt1Reg_Eta.clear();
   this -> _hltPFTau35TrackPt1Reg_Phi.clear();
+
+  this -> _genJet_pt . clear();
+  this -> _genJet_eta . clear();
+  this -> _genJet_phi . clear();
+  this -> _genJet_emEnergy . clear();
+  this -> _genJet_hadEnergy . clear();
+  this -> _genJet_invisibleEnergy . clear();
+  this -> _genJet_muonEnergy . clear();
+
+  this -> _genPart_id . clear();
+  this -> _genPart_stat . clear();
+  this -> _genPart_parent . clear();
+  this -> _genPart_pt . clear();
+  this -> _genPart_eta . clear();
+  this -> _genPart_phi . clear();
+  this -> _genPart_E . clear();
+  this -> _genPart_ch . clear();
+
+  _nHCALTP = 0;
+  this ->  _hcalTPieta . clear();
+  this ->  _hcalTPiphi . clear();
+  this ->  _hcalTPCaliphi . clear();
+  this ->  _hcalTPet . clear();
+  this ->  _hcalTPcompEt . clear();
+  this ->  _hcalTPfineGrain . clear();
+
+  _nECALTP = 0;
+  this ->  _ecalTPieta . clear();
+  this ->  _ecalTPiphi . clear();
+  this ->  _ecalTPCaliphi . clear();
+  this ->  _ecalTPet . clear();
+  this ->  _ecalTPcompEt . clear();
+  this ->  _ecalTPfineGrain . clear();
+
+  _nTower = 0;
+  this ->  _TT_ieta . clear();
+  this ->  _TT_iphi . clear();
+  this ->  _TT_iet . clear();
+  this ->  _TT_iem . clear();
+  this ->  _TT_ihad . clear();
+  this ->  _TT_iratio . clear();
+  this ->  _TT_iqual . clear();
+  this ->  _TT_et . clear();
+  this ->  _TT_eta . clear();
+  this ->  _TT_phi . clear();
 
 }
 
@@ -756,6 +884,51 @@ void Run3nuMC::beginJob()
   this -> _tree -> Branch("hltPFTau35TrackPt1Reg_Eta",  &_hltPFTau35TrackPt1Reg_Eta);
   this -> _tree -> Branch("hltPFTau35TrackPt1Reg_Phi",  &_hltPFTau35TrackPt1Reg_Phi);
 
+  this -> _tree -> Branch("genJet_pt", &_genJet_pt);
+  this -> _tree -> Branch("genJet_eta", &_genJet_eta);
+  this -> _tree -> Branch("genJet_phi", &_genJet_phi);
+  this -> _tree -> Branch("genJet_emEnergy", &_genJet_emEnergy);
+  this -> _tree -> Branch("genJet_hadEnergy", &_genJet_hadEnergy);
+  this -> _tree -> Branch("genJet_invisibleEnergy", &_genJet_invisibleEnergy);
+  this -> _tree -> Branch("genJet_muonEnergy", &_genJet_muonEnergy);
+
+  this -> _tree  -> Branch("genPart_id",&_genPart_id);
+  this -> _tree  -> Branch("genPart_stat",&_genPart_stat);
+  this -> _tree  -> Branch("genPart_parent",&_genPart_parent);
+  this -> _tree  -> Branch("genPart_pt",&_genPart_pt);
+  this -> _tree  -> Branch("genPart_eta",&_genPart_eta);
+  this -> _tree  -> Branch("genPart_phi",&_genPart_phi);
+  this -> _tree  -> Branch("genPart_E",&_genPart_E);
+  this -> _tree  -> Branch("genPart_ch",&_genPart_ch);
+
+  this -> _tree -> Branch("_nHCALTP", &_nHCALTP, "nHCALTP/S");
+  this -> _tree -> Branch("_hcalTPieta", &_hcalTPieta);
+  this -> _tree -> Branch("_hcalTPiphi", &_hcalTPiphi);
+  this -> _tree -> Branch("_hcalTPCaliphi", &_hcalTPCaliphi);
+  this -> _tree -> Branch("_hcalTPet", &_hcalTPet);
+  this -> _tree -> Branch("_hcalTPcompEt", &_hcalTPcompEt);
+  this -> _tree -> Branch("_hcalTPfineGrain", &_hcalTPfineGrain);
+
+  this -> _tree -> Branch("_nECALTP", &_nECALTP, "nECALTP/S");
+  this -> _tree -> Branch("_ecalTPieta", &_ecalTPieta);
+  this -> _tree -> Branch("_ecalTPiphi", &_ecalTPiphi);
+  this -> _tree -> Branch("_ecalTPCaliphi", &_ecalTPCaliphi);
+  this -> _tree -> Branch("_ecalTPet", &_ecalTPet);
+  this -> _tree -> Branch("_ecalTPcompEt", &_ecalTPcompEt);
+  this -> _tree -> Branch("_ecalTPfineGrain", &_ecalTPfineGrain);
+
+  this -> _tree -> Branch("_nTower", &_nTower, "nTower/S");
+  this -> _tree -> Branch("_TT_ieta", &_TT_ieta);
+  this -> _tree -> Branch("_TT_iphi", &_TT_iphi);
+  this -> _tree -> Branch("_TT_iet", &_TT_iet);
+  this -> _tree -> Branch("_TT_iem", &_TT_iem);
+  this -> _tree -> Branch("_TT_ihad", &_TT_ihad);
+  this -> _tree -> Branch("_TT_iratio", &_TT_iratio);
+  this -> _tree -> Branch("_TT_iqual", &_TT_iqual);
+  this -> _tree -> Branch("_TT_et", &_TT_et);
+  this -> _tree -> Branch("_TT_eta", &_TT_eta);
+  this -> _tree -> Branch("_TT_phi", &_TT_phi);
+
   return;
 }
 
@@ -776,9 +949,84 @@ void Run3nuMC::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 {
   this -> Initialize();
 
+  edm::ESHandle<CaloTPGTranscoder> decoder;
+  decoder = eSetup.getHandle(decoderToken_);
+
   _indexevents = iEvent.id().event();
   _runNumber = iEvent.id().run();
   _lumi = iEvent.luminosityBlock();
+
+  edm::Handle<GenEventInfoProduct> genEvt;
+  try {iEvent.getByToken(_genTag, genEvt);}  catch (...) {;}
+
+  if(genEvt.isValid())
+    {
+      this->_MC_weight = genEvt->weight();
+    }
+
+  edm::Handle<reco::GenJetCollection> genJets;
+  iEvent.getByToken(_genJetTag, genJets);
+
+  for (reco::GenJetCollection::const_iterator jetIt = genJets->begin(); jetIt != genJets->end() ; jetIt++)
+    {
+      _genJet_pt.push_back(jetIt->pt());
+      _genJet_eta.push_back(jetIt->eta());
+      _genJet_phi.push_back(jetIt->phi());
+      _genJet_emEnergy.push_back(jetIt->emEnergy());
+      _genJet_hadEnergy.push_back(jetIt->hadEnergy());
+      _genJet_invisibleEnergy.push_back(jetIt->invisibleEnergy());
+      _genJet_muonEnergy.push_back(jetIt->muonEnergy());
+    } 
+
+  edm::Handle<reco::GenParticleCollection> genParticles;
+  iEvent.getByToken(_genParticleTag, genParticles);
+
+  if (genParticles.isValid()) {
+    int nPart{0};
+
+    //cout<<"is valid"<<endl;
+    //cout<<"size ="<<genParticles->size()<<endl;
+
+    for (size_t i = 0; i < genParticles->size(); ++i) {
+      const reco::GenParticle& p = (*genParticles)[i];
+      int id = p.pdgId();
+
+      // See if the parent was interesting
+      int parentID = -10000;
+      unsigned int nMo = p.numberOfMothers();
+      for (unsigned int i = 0; i < nMo; ++i) {
+	int thisParentID = dynamic_cast<const reco::GenParticle*>(p.mother(i))->pdgId();
+	//
+	// Is this a bottom hadron?
+	int hundredsIndex = abs(thisParentID) / 100;
+	int thousandsIndex = abs(thisParentID) / 1000;
+	if (((abs(thisParentID) >= 23) && (abs(thisParentID) <= 25)) || (abs(thisParentID) == 6) ||
+	    (hundredsIndex == 5) || (hundredsIndex == 4) || (thousandsIndex == 5) || (thousandsIndex == 4))
+	  parentID = thisParentID;
+      }
+      if ((parentID == -10000) && (nMo > 0))
+	parentID = dynamic_cast<const reco::GenParticle*>(p.mother(0))->pdgId();
+      //
+      // If the parent of this particle is interesting, store all of the info
+      if ((parentID != p.pdgId()) &&
+	  ((parentID > -9999) || (abs(id) == 11) || (abs(id) == 13) || (abs(id) == 23) || (abs(id) == 24) ||
+	   (abs(id) == 25) || (abs(id) == 4) || (abs(id) == 5) || (abs(id) == 6)))
+	{
+
+	  _genPart_id.push_back(p.pdgId());
+	  _genPart_stat.push_back(p.status());
+	  _genPart_parent.push_back(parentID);
+	  _genPart_pt.push_back(p.pt());
+	  _genPart_eta.push_back(p.eta());
+	  _genPart_phi.push_back(p.phi());
+	  _genPart_E.push_back(p.energy());
+	  _genPart_ch.push_back(p.charge());
+	    
+	  ++nPart;
+	}
+    }
+    //l1GenData_->nPart = nPart;
+  }
 
   edm::Handle< std::vector<PileupSummaryInfo> > PUinfoHandle;
   try {iEvent.getByToken(_truePUTag, PUinfoHandle);}  catch (...) {;}
@@ -985,9 +1233,93 @@ void Run3nuMC::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
     }
 
 
+  const double ecalLSB_ = 0.5;
 
+  edm::Handle<EcalTrigPrimDigiCollection> ecalTPs;
+  iEvent.getByToken(_ecalTag, ecalTPs);
+  
+  if (ecalTPs.isValid()) {
+    for (const auto& itr : *(ecalTPs.product())) {
+      short ieta = (short)itr.id().ieta();
+      //      unsigned short absIeta = (unsigned short) abs(ieta);
+      //      short sign = ieta/absIeta;
 
+      unsigned short cal_iphi = (unsigned short)itr.id().iphi();
+      unsigned short iphi = (72 + 18 - cal_iphi) % 72;
+      unsigned short compEt = itr.compressedEt();
+      double et = ecalLSB_ * compEt;
+      unsigned short fineGrain = (unsigned short)itr.fineGrain();
 
+      if (compEt > 0) {
+
+	_nECALTP++;
+	_ecalTPieta.push_back(ieta);
+	_ecalTPiphi.push_back(iphi);
+	_ecalTPCaliphi.push_back(cal_iphi);
+	_ecalTPet.push_back(et);
+	_ecalTPcompEt.push_back(compEt);
+	_ecalTPfineGrain.push_back(fineGrain);
+      }
+    }
+  }
+
+  edm::Handle<HcalTrigPrimDigiCollection> hcalTPs;
+  iEvent.getByToken(_hcalTag, hcalTPs);
+  
+  if (hcalTPs.isValid()) {
+    for (auto itr : (*hcalTPs.product())) {
+      int ver = itr.id().version();
+      short ieta = (short)itr.id().ieta();
+      unsigned short absIeta = (unsigned short)abs(ieta);
+      //      short sign = ieta/absIeta;
+
+      unsigned short cal_iphi = (unsigned short)itr.id().iphi();
+      unsigned short iphi = (72 + 18 - cal_iphi) % 72;
+
+      unsigned short compEt = itr.SOI_compressedEt();
+      double et = decoder->hcaletValue(itr.id(), itr.t0());
+
+      unsigned short fineGrain = (unsigned short)itr.SOI_fineGrain();
+
+      if (compEt > 0 && (absIeta < 29 || ver == 1)) {
+	//cout<<compEt<<endl;
+	_nHCALTP++;
+	_hcalTPieta.push_back(ieta);
+	_hcalTPiphi.push_back(iphi);
+	_hcalTPCaliphi.push_back(cal_iphi);
+	_hcalTPet.push_back(et);
+	_hcalTPcompEt.push_back(compEt);
+	_hcalTPfineGrain.push_back(fineGrain);
+      }
+    }
+
+  }
+
+  edm::Handle<l1t::CaloTowerBxCollection> l1Towers;
+  iEvent.getByToken(_l1TowerTag, l1Towers);
+  
+  if (l1Towers.isValid()) {
+    for (int ibx = l1Towers->getFirstBX(); ibx <= l1Towers->getLastBX(); ++ibx) {
+      for (auto itr = l1Towers->begin(ibx); itr != l1Towers->end(ibx); ++itr) {
+        if (itr->hwPt() <= 0)
+          continue;
+
+	_nTower++;
+	_TT_ieta.push_back(itr->hwEta());
+	_TT_iphi.push_back(itr->hwPhi());
+	_TT_iet.push_back(itr->hwPt());
+	_TT_iem.push_back(itr->hwEtEm());
+	_TT_ihad.push_back(itr->hwEtHad());
+	_TT_iratio.push_back(itr->hwEtRatio());
+	_TT_iqual.push_back(itr->hwQual());
+	_TT_et.push_back(itr->pt());
+	_TT_eta.push_back(itr->eta());
+	_TT_phi.push_back(itr->phi());
+
+      }
+    }
+
+  }  
 
   edm::Handle<edm::TriggerResults> triggerBits;
   iEvent.getByToken(this -> _triggerBits, triggerBits);

@@ -49,13 +49,16 @@ if options.isNU:
     process.GlobalTag.globaltag = '123X_mcRun3_2021_realistic_v13'
     process.load('TauTagAndProbe.TauTagAndProbe.Run3nuMC_cff')
 else:
+    #process.GlobalTag.globaltag = '120X_mcRun3_2021_realistic_v6'
     process.GlobalTag.globaltag = '123X_mcRun3_2021_realistic_v13'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
         # dummy for creation
-        '/store/mc/Run3Winter20DRPremixMiniAOD/VBFHToTauTau_M125_TuneCUETP8M1_14TeV_powheg_pythia8/GEN-SIM-RAW/110X_mcRun3_2021_realistic_v6-v1/20000/2D4F0AC7-86ED-1F45-8E14-58D72D98667C.root'
+        #'/store/mc/Run3Summer21DRPremix/VBFHToInvisible_M125_TuneCP5_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/120X_mcRun3_2021_realistic_v6-v2/2550000/648645b9-847f-415e-8d08-b7e14e26d871.root'
+        #'/store/mc/Run3Summer21DRPremix/SingleNeutrino_E-10-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540001/a59a3e79-fd72-4292-8c42-761b40c967b1.root'
+        'file:a59a3e79-fd72-4292-8c42-761b40c967b1.root'
     ),
 )
 
