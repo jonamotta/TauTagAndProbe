@@ -85,7 +85,7 @@ else:
     #process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
 
 
-process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi")
+process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_2_cfi")
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate14kHz_cfi") # reOptimized LUTs for 14kHz rate
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate16kHz_cfi") # reOptimized LUTs for 16kHz rate
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate18kHz_cfi") # reOptimized LUTs for 18kHz rate
