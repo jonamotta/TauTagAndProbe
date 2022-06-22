@@ -32,7 +32,7 @@ def splitInBlocks (l, n):
 ###########
 
 njobs = 1000 # 150
-filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_3_0_pre6/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_4_0/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 if not isMC:
     # filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt")

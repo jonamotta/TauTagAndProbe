@@ -46,10 +46,10 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 from Configuration.AlCa.autoCond import autoCond
 if options.isNU:
-    process.GlobalTag.globaltag = '123X_mcRun3_2021_realistic_v13'
+    process.GlobalTag.globaltag = '124X_mcRun3_2022_realistic_v6'
     process.load('TauTagAndProbe.TauTagAndProbe.Run3nuMC_cff')
 else:
-    process.GlobalTag.globaltag = '123X_mcRun3_2021_realistic_v13'
+    process.GlobalTag.globaltag = '124X_mcRun3_2022_realistic_v6'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
 
 process.source = cms.Source("PoolSource",
@@ -85,10 +85,7 @@ else:
     #process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
 
 
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_1_cfi") # latest in CMSSW_11_2_0
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2018_v1_4_cfi") # latest in CMSSW_11_0_2
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CMSSW_12_0_2
-process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi") # latest in CMSSW_12_3_0_pre6
+process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi")
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate14kHz_cfi") # reOptimized LUTs for 14kHz rate
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate16kHz_cfi") # reOptimized LUTs for 16kHz rate
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate18kHz_cfi") # reOptimized LUTs for 18kHz rate
