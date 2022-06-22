@@ -27,49 +27,43 @@ def splitInBlocks (l, n):
 
 ###########
 
-njobs = 200
-#filelist = open("fileListCertification_20Oct16.txt")
-#filelist = open("fileListCertification_27Oct16.txt")
-#filelist = open("fileListCertification_3Nov16.txt")
-#filelist = open("fileList_Run2016B-23Sep2016-v3_141116.txt")
-#filelist = open("fileList_Run2016C-23Sep2016-v1_141116.txt")
-#filelist = open("fileList_Run2016D-23Sep2016-v1_141116.txt")
-#filelist = open("fileList_Run2016E-23Sep2016-v1_141116.txt")
-#filelist = open("fileList_Run2016E-23Sep2016-v1_141116.txt")
-#filelist = open("fileList_Run2016F-23Sep2016-v1_141116.txt")
-#filelist = open("fileList_Run2016G-23Sep2016-v1_141116.txt")
-#filelist = open("fileList_Run2016H-PromptReco-v2_141116.txt")
-#filelist = open("fileList_Run2016H-PromptReco-v3_141116.txt")
-#filelist = open("fileList_Run2016H-PromptReco-v2_141116_Run282092.txt")
-filelist = open("VBFHToTauTau_M125_13TeV_powheg_pythia8_RunIISummer16MiniAODv2-FlatPU28to62HcalNZSRAW_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1.txt")
+njobs = 2600
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_3_0_pre6/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
-#filelist = open("fileList_MC_RECO.txt")
-#folder = "MC_RECO_9x9"
-#folder = "MC_RECO_12x12"
-#folder = "Certification_20Oct16"
-#folder = "Certification_27Oct16"
+# 100X signal RunII MC
+#filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIISpring18MiniAOD-NZSPU28to70_100X_upgrade2018_realistic_v10-v1_MINIAODSIM.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12/Run2_MC_VBFHToTauTau_M125_MINIAOD100X_2022_06_10"
 
-folder = "MC_MiniAOD_multipleTaus_16_05_17"
-#folder = "Run2016H-PromptReco-v2_141116_282092_noBtagVeto"
-#folder = "Run2016H-PromptReco-v3_141116"
-#folder = "Run2016H-PromptReco-v2_141116"
-#folder = "Run2016G-23Sep2016-v1_141116"
-#folder = "Run2016F-23Sep2016-v1_141116"
-#folder = "Run2016E-23Sep2016-v1_141116"
-#folder = "Run2016D-23Sep2016-v1_141116"
-#folder = "Run2016C-23Sep2016-v1_141116"
-#folder = "Run2016B-23Sep2016-v3_141116"
-JSONfile = "/home/llr/cms/davignon/json_NoL1T.txt"
+# 102X signal RunII MC
+# filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v1__MINIAODSIM.txt")
+# folder = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12/Run2_MC_VBFHToTauTau_M125_MINIAOD102X_2022_06_10"
+
+# 120X signal Run3 MC
+filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21MiniAOD-120X_mcRun3_2021_realistic_v5-v2__MINIAODSIM.txt")
+folder = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12/Run3_MC_VBFHToTauTau_M125_MINIAOD_multipleTaus_2022_06_10"
+
+# EphemeralZeroBias data
+#filelist = open(filedir+"/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323755.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323755"
+#filelist = open(filedir+"/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323775.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323775"
+
+# SingleMuon data
+#filelist = open(filedir+"/Run323775__Run2018D__SingleMuon__MINIAOD__UL2018_MiniAODv2-v3.txt")
+#folder = "/data_CMS/cms/motta/Run3preparation/SingleMuon_2018D_Run323775_MINIAOD_UL2018v2"
+
+
+#JSONfile = "/home/llr/cms/davignon/json_NoL1T.txt"
 #JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"
 #/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
 
 ###########
 
-os.system ('source /opt/exp_soft/cms/t3/t3setup')
+# os.system ('source /opt/exp_soft/cms/t3/t3setup')
 
-os.system('mkdir ' + folder)
+os.system('mkdir -p ' + folder)
 files = [f.strip() for f in filelist]
-print "Input has" , len(files) , "files" 
+print("Input has" , len(files) , "files")
 if njobs > len(files) : njobs = len(files)
 filelist.close()
 
@@ -79,14 +73,15 @@ for idx, block in enumerate(fileblocks):
     outRootName = folder + '/Ntuple_' + str(idx) + '.root'
     outJobName  = folder + '/job_' + str(idx) + '.sh'
     outListName = folder + "/filelist_" + str(idx) + ".txt"
-    outLogName  = os.getcwd() + "/" + folder + "/log_" + str(idx) + ".txt"
+    outLogName  = folder + "/log_" + str(idx) + ".txt"
 
     jobfilelist = open(outListName, 'w')
     for f in block: jobfilelist.write(f+"\n")
     jobfilelist.close()
 
     if not isMC:
-        cmsRun = "cmsRun test.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
+        cmsRun = "cmsRun test.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
+        #cmsRun = "cmsRun test.py maxEvents=200 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
     else:
         cmsRun = "cmsRun test_noTagAndProbe_multipleTaus.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName        
 
@@ -102,6 +97,8 @@ for idx, block in enumerate(fileblocks):
     skimjob.close ()
 
     os.system ('chmod u+rwx ' + outJobName)
-    command = ('/opt/exp_soft/cms/t3/t3submit_new -long \'' + outJobName +"\'")
-    # print command
+    # command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
+    command = ('/home/llr/cms/motta/t3submit -short \'' + outJobName +"\'")
+    print(command)
     os.system (command)
+    # break

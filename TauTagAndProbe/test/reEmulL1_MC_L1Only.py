@@ -88,11 +88,11 @@ else:
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_1_cfi") # latest in CMSSW_11_2_0
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2018_v1_4_cfi") # latest in CMSSW_11_0_2
 #process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CMSSW_12_0_2
-process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi") # latest in CMSSW_12_3_0_pre1
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_reOpt14kHz_cfi") # reOptimized LUTs for 14kHz rate
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_reOpt16kHz_cfi") # reOptimized LUTs for 16kHz rate
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_reOpt18kHz_cfi") # reOptimized LUTs for 18kHz rate
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_reOpt20kHz_cfi") # reOptimized LUTs for 20kHz rate
+process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi") # latest in CMSSW_12_3_0_pre6
+#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate14kHz_cfi") # reOptimized LUTs for 14kHz rate
+#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate16kHz_cfi") # reOptimized LUTs for 16kHz rate
+#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate18kHz_cfi") # reOptimized LUTs for 18kHz rate
+# process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_rate20kHz_cfi") # reOptimized LUTs for 20kHz rate
 
 ############################
 # PFA1' Filter

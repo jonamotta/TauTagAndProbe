@@ -27,20 +27,20 @@ def splitInBlocks (l, n):
 
 ###########
 
-njobs = 150
+njobs = 2600
 filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_3_0_pre6/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 # 100X signal RunII MC
 #filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIISpring18MiniAOD-NZSPU28to70_100X_upgrade2018_realistic_v10-v1_MINIAODSIM.txt")
-#folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run2_MC_VBFHToTauTau_M125_MINIAOD100X_2022_03_15"
+#folder = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12/Run2_MC_VBFHToTauTau_M125_MINIAOD100X_2022_06_10"
 
 # 102X signal RunII MC
-filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v1__MINIAODSIM.txt")
-folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run2_MC_VBFHToTauTau_M125_MINIAOD102X_2022_03_15"
+# filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIIAutumn18MiniAOD-102X_upgrade2018_realistic_v15_ext1-v1__MINIAODSIM.txt")
+# folder = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12/Run2_MC_VBFHToTauTau_M125_MINIAOD102X_2022_06_10"
 
 # 120X signal Run3 MC
-#filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21MiniAOD-120X_mcRun3_2021_realistic_v5-v2__MINIAODSIM.txt")
-#folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_03_15"
+filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21MiniAOD-120X_mcRun3_2021_realistic_v5-v2__MINIAODSIM.txt")
+folder = "/data_CMS/cms/motta/Run3preparation/2022_06_10_optimizationV12/Run3_MC_VBFHToTauTau_M125_MINIAOD_2022_06_10"
 
 # EphemeralZeroBias data
 #filelist = open(filedir+"/EphemeralZeroBias_PromptRecoMINIAOD_2018D_Run323755.txt")
@@ -59,7 +59,7 @@ folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run2_MC
 
 ###########
 
-os.system ('source /opt/exp_soft/cms/t3/t3setup')
+# os.system ('source /opt/exp_soft/cms/t3/t3setup')
 
 os.system('mkdir -p ' + folder)
 files = [f.strip() for f in filelist]
@@ -97,7 +97,8 @@ for idx, block in enumerate(fileblocks):
     skimjob.close ()
 
     os.system ('chmod u+rwx ' + outJobName)
-    command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
-    #command = ('/home/llr/cms/motta/t3submit -short -q cms \'' + outJobName +"\'")
+    # command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
+    command = ('/home/llr/cms/motta/t3submit -short \'' + outJobName +"\'")
     print(command)
     os.system (command)
+    # break

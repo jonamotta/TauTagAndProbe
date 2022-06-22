@@ -31,37 +31,43 @@ def splitInBlocks (l, n):
 
 ###########
 
-njobs = 2600 # 150
+njobs = 1000 # 150
 filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_3_0_pre6/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 if not isMC:
-    #filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt")
-    #folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755_reEmuTPs"
-    filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323775.txt")
-    folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323775_reEmuTPs"
+    # filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt")
+    # folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755_reEmuTPs"
+    # filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323775.txt")
+    # folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323775_reEmuTPs"
+    exit()
 
 else:
     # 120X signal Run3 MC
-    filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21DRPremix-120X_mcRun3_2021_realistic_v6-v2__GEN-SIM-DIGI-RAW.txt")
-    #folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run3_MC_VBFHToTauTau_M125_RAW_2022_03_15"
-    folder = "/data_CMS/cms/motta/Run3preparation/2022_04_20_optimizationV9_ReOptReEmu/Run3_MC_VBFHToTauTau_M125_ReOptReEmu14kHz_2022_04_20"
+    # filelist = open(filedir+"/VBFHToTauTau_M125_TuneCP5_14TeV-powheg-pythia8__Run3Summer21DRPremix-120X_mcRun3_2021_realistic_v6-v2__GEN-SIM-DIGI-RAW.txt")
+    # folder = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_VBFHToTauTau_M125_RAW_2022_06_13"
+    # folder = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13_ReOptReEmu/Run3_MC_VBFHToTauTau_M125_ReOptReEmu20kHz_2022_06_13"
 
     # 112X Neutrino
     # filelist = open(filedir+"/SingleNeutrino_Pt-2To20-gun__Run3Winter21DRMiniAOD-FlatPU30to80FEVT_SNB_112X_mcRun3_2021_realistic_v16-v2__GEN-SIM-DIGI-RAW.txt")
-    # folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run3_MC_SingleNeutrinoGun_RAW112X_2022_03_15"
+    # folder = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_SingleNeutrinoGun_RAW112X_2022_06_13"
     # isNU = True
 
     # 120X Neutrino
     # filelist = open(filedir+"/SingleNeutrino_Pt-2To20-gun__Run3Summer21DRPremix-SNB_120X_mcRun3_2021_realistic_v6-v2__GEN-SIM-DIGI-RAW.txt")
-    # folder = "/data_CMS/cms/motta/Run3preparation/2022_03_15_optimizationV10/Run3_MC_SingleNeutrinoGun_RAW120X_2022_03_15"
+    # folder = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_SingleNeutrinoGun_RAW120X_2022_06_13"
     # isNU = True
+
+    # 122X Neutrino
+    filelist = open(filedir+"/SingleNeutrino_Pt-2To20-gun__Run3Winter22DR-L1TPU0to99FEVT_SNB_122X_mcRun3_2021_realistic_v9-v2__GEN-SIM-DIGI-RAW.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/2022_06_13_optimizationV13/Run3_MC_SingleNeutrinoGun_RAW122X_2022_06_13"
+    isNU = True
 
 JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"
 #JSONfile = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt"
 
 ###########
 
-os.system ('source /opt/exp_soft/cms/t3/t3setup')
+# os.system ('source /opt/exp_soft/cms/t3/t3setup')
 
 os.system('mkdir -p ' + folder)
 files = [f.strip() for f in filelist]
@@ -104,7 +110,8 @@ for idx, block in enumerate(fileblocks):
     skimjob.close ()
 
     os.system ('chmod u+rwx ' + outJobName)
-    # command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
-    command = ('/home/llr/cms/motta/t3submit -short \'' + outJobName +"\'")
+    command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
+    # command = ('/home/llr/cms/motta/t3submit -short \'' + outJobName +"\'")
     print command
     os.system (command)
+    # break
