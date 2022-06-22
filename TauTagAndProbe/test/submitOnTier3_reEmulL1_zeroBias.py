@@ -39,7 +39,15 @@ if not isMC:
     # folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755_reEmuTPs"
     # filelist = open(filedir+"/EphemeralZeroBias_2018D_Run323775.txt")
     # folder = "/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323775_reEmuTPs"
-    exit()
+    
+    filelist = open(filedir+"/ZeroBias1_Run2022A_Runs2bunches0p015lumi.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/ZeroBias1_Run2022A_Runs2bunches0p015lumi_reEmuTPs"
+    filelist = open(filedir+"/ZeroBias1_Run2022A_Runs2bunches0p03lumi.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/ZeroBias1_Run2022A_Runs2bunches0p03lumi_reEmuTPs"
+    filelist = open(filedir+"/ZeroBias1_Run2022A_Runs3bunches0p04lumi.txt")
+    folder = "/data_CMS/cms/motta/Run3preparation/ZeroBias1_Run2022A_Runs3bunches0p04lumi_reEmuTPs"
+    
+    # exit()
 
 else:
     # 120X signal Run3 MC

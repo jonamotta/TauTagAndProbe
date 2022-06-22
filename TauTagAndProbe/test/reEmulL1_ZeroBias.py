@@ -66,7 +66,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '123X_dataRun2_v1'
+    process.GlobalTag.globaltag = '124X_dataRun3_v4'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -77,7 +77,7 @@ if not isMC: # will use 80X
 
 else: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '123X_dataRun2_v1'
+    process.GlobalTag.globaltag = '124X_dataRun3_v4'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -107,10 +107,7 @@ else:
     #from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAWsimTP
     #process = L1TReEmulFromRAWsimTP(process)
 
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_1_cfi") # latest in CMSSW_11_2_0
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2018_v1_4_cfi") # latest in CMSSW_11_0_2
-#process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CMSSW_12_0_2
-process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi") # latest in CMSSW_12_3_0_pre1
+process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_2_cfi")
 
 ############################
 # PFA1' Filter
