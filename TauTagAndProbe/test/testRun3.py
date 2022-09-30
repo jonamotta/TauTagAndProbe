@@ -1,7 +1,8 @@
 import FWCore.ParameterSet.VarParsing as VarParsing
 import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Config as cms
-process = cms.Process("TagAndProbe")
+from Configuration.StandardSequences.Eras import eras
+process = cms.Process("TagAndProbe", eras.Run3)
 
 isMC = False
 #isMC = True
@@ -90,27 +91,27 @@ options.parseArguments()
 
 if not isMC:
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '120X_dataRun2_v2'
-    process.load('TauTagAndProbe.TauTagAndProbe.tagAndProbe_cff')
+    process.GlobalTag.globaltag = '124X_dataRun3_v9'
+    process.load('TauTagAndProbe.TauTagAndProbe.tagAndProbeRun3_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
             '/store/data/Run2016H/SingleMuon/MINIAOD/PromptReco-v2/000/282/092/00000/DE499C8E-1B8B-E611-8C93-02163E014207.root'
         ),
     )
 else:
-    process.GlobalTag.globaltag = '120X_dataRun2_v2'
+    process.GlobalTag.globaltag = '124X_dataRun3_v9'
     process.load('TauTagAndProbe.TauTagAndProbe.MCanalysis_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(            
             '/store/mc/PhaseIFall16MiniAOD/VBFHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU28to62HcalNZSRAW_PhaseIFall16_90X_upgrade2017_realistic_v6_C1-v1/00000/182AC7D1-661B-E711-BA96-0242AC130006.root'
-            #'/store/mc/RunIISpring16MiniAODv2/GluGluHToTauTau_M125_13TeV_powheg_pythia8/MINIAODSIM/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/B0D22F36-9567-E611-A5FB-0CC47A4DEE76.root'
         )
     )
 
 if is2016 and not isMC:
     process.patTriggerUnpacker.patTriggerObjectsStandAlone = cms.InputTag("selectedPatTrigger","","RECO")
 
-process.load("L1Trigger.L1TCalorimeter.caloParams_2021_v0_2_cfi") # latest in CMSSW_12_0_2
+# RUN3 - 2022 full LUTs as online
+process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_4_cfi")
 
 if options.JSONfile:
     print("Using JSON: " , options.JSONfile)

@@ -1,5 +1,5 @@
-#ifndef TAUTAGANDPROBEFILTER_H
-#define TAUTAGANDPROBEFILTER_H
+#ifndef TAUTAGANDPROBEFILTERRUN3_H
+#define TAUTAGANDPROBEFILTERRUN3_H
 
 #include "FWCore/Framework/interface/EDFilter.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -12,6 +12,7 @@
 #include <DataFormats/PatCandidates/interface/Muon.h>
 #include <DataFormats/PatCandidates/interface/MET.h>
 #include <DataFormats/PatCandidates/interface/Jet.h>
+#include <DataFormats/PatCandidates/interface/Electron.h>
 #include <DataFormats/PatCandidates/interface/CompositeCandidate.h>
 
 #include <iostream>
@@ -23,11 +24,11 @@ using namespace std;
 // using namespace reco;
 
 
-class TauTagAndProbeFilter : public edm::EDFilter {
+class TauTagAndProbeFilterRun3 : public edm::EDFilter {
 
     public:
-        TauTagAndProbeFilter(const edm::ParameterSet &);
-        ~TauTagAndProbeFilter();
+        TauTagAndProbeFilterRun3(const edm::ParameterSet &);
+        ~TauTagAndProbeFilterRun3();
 
     private:
         bool filter(edm::Event &, edm::EventSetup const&);
@@ -37,47 +38,42 @@ class TauTagAndProbeFilter : public edm::EDFilter {
         EDGetTokenT<pat::TauRefVector>   _tausTag;
         EDGetTokenT<pat::MuonRefVector>  _muonsTag;
         EDGetTokenT<pat::METCollection>  _metTag;
-        bool _useMassCuts;
-        EDGetTokenT<edm::View<reco::GsfElectron> >  _electronsTag;
-        edm::EDGetTokenT<edm::ValueMap<bool> > _eleLooseIdMapTag;
+        bool _useWMassCuts;
+        bool _useZMassCuts;
+        EDGetTokenT<edm::View<pat::Electron> >  _electronsTag;
         EDGetTokenT<pat::JetRefVector>  _bjetsTag;
 };
 
-TauTagAndProbeFilter::TauTagAndProbeFilter(const edm::ParameterSet & iConfig) :
+TauTagAndProbeFilterRun3::TauTagAndProbeFilterRun3(const edm::ParameterSet & iConfig) :
 _tausTag  (consumes<pat::TauRefVector>  (iConfig.getParameter<InputTag>("taus"))),
 _muonsTag (consumes<pat::MuonRefVector> (iConfig.getParameter<InputTag>("muons"))),
 _metTag   (consumes<pat::METCollection> (iConfig.getParameter<InputTag>("met"))),
-_electronsTag (consumes<edm::View<reco::GsfElectron> > (iConfig.getParameter<edm::InputTag>("electrons"))),
-_eleLooseIdMapTag  (consumes<edm::ValueMap<bool> >(iConfig.getParameter<edm::InputTag>("eleLooseIdMap"))),
+_electronsTag (consumes<edm::View<pat::Electron>> (iConfig.getParameter<edm::InputTag>("electrons"))),
 _bjetsTag  (consumes<pat::JetRefVector>  (iConfig.getParameter<InputTag>("bjets")))
 {
     produces <pat::TauRefVector>  (); // probe
     produces <pat::MuonRefVector> (); // tag
-    _useMassCuts = iConfig.getParameter<bool>("useMassCuts");
+    _useWMassCuts = iConfig.getParameter<bool>("useWMassCuts");
+    _useZMassCuts = iConfig.getParameter<bool>("useZMassCuts");
 }
 
-TauTagAndProbeFilter::~TauTagAndProbeFilter()
+TauTagAndProbeFilterRun3::~TauTagAndProbeFilterRun3()
 {}
 
-bool TauTagAndProbeFilter::filter(edm::Event & iEvent, edm::EventSetup const& iSetup)
+bool TauTagAndProbeFilterRun3::filter(edm::Event & iEvent, edm::EventSetup const& iSetup)
 {
 
     std::unique_ptr<pat::MuonRefVector> resultMuon ( new pat::MuonRefVector );
     std::unique_ptr<pat::TauRefVector>  resultTau  ( new pat::TauRefVector  );  
 
-    // Veto events with loose electrons
-    Handle<edm::View<reco::GsfElectron> > electrons;
+    Handle<edm::View<pat::Electron> > electrons;
     iEvent.getByToken(_electronsTag, electrons);
-    Handle<edm::ValueMap<bool> > loose_id_decisions;
-    iEvent.getByToken(_eleLooseIdMapTag, loose_id_decisions);
 
-    for(unsigned int i = 0; i< electrons->size(); ++i){
-     
-      const auto ele = electrons->ptrAt(i);
-      int isLooseID = (*loose_id_decisions)[ele];
-      if(isLooseID && ele->p4().Pt()>10 && fabs(ele->p4().Eta())<2.5)
-	return false;
-
+    // veto events with loose electrons (acytually not super sure that wp80 is loose)
+    for(const auto& ele : iEvent.get(_electronsTag) )
+    {
+        int isLooseID = ele.electronID("mvaEleID-Fall17-iso-V2-wp80");
+        if(isLooseID && ele.p4().Pt()>10 && fabs(ele.p4().Eta())<2.5) return false;
     }
 
     // ---------------------   search for the tag in the event --------------------
@@ -93,7 +89,7 @@ bool TauTagAndProbeFilter::filter(edm::Event & iEvent, edm::EventSetup const& iS
 
     float mt = ComputeMT (mu->p4(), met);
 
-    if (mt >= 30 && _useMassCuts) return false; // reject W+jets
+    if (mt >= 30 && _useWMassCuts) return false; // reject W+jets
 
 
     // ------------------- get Taus -------------------------------
@@ -106,35 +102,32 @@ bool TauTagAndProbeFilter::filter(edm::Event & iEvent, edm::EventSetup const& iS
     {
         const pat::TauRef tau = (*tauHandle)[itau] ;
         math::XYZTLorentzVector pSum = mu->p4() + tau->p4();
-        if (_useMassCuts && (pSum.mass() <= 40 || pSum.mass() >= 80)) continue; // visible mass in (40, 80)
+        if (_useZMassCuts && (pSum.mass() <= 40 || pSum.mass() >= 80)) continue; // visible mass in (40, 80)
         if (deltaR(*tau, *mu) < 0.5) continue;
 
-        // min iso
-        float isoMVA = tau->tauID("byIsolationMVArun2v1DBoldDMwLTraw");
+        // store iso against jet and idx 
+        float isoMVA = tau->tauID("byDeepTau2017v2p1VSjetraw");
         tausIdxPtVec.push_back(make_pair(isoMVA, itau));
     }
 
-
     pat::TauRef tau;
-
-    if (tausIdxPtVec.size() == 0) return false; //No tau found
-    if (tausIdxPtVec.size() > 1) sort (tausIdxPtVec.begin(), tausIdxPtVec.end()); //Sort if multiple taus
+    if (tausIdxPtVec.size() == 0) return false; // no tau found
+    if (tausIdxPtVec.size() > 1) sort(tausIdxPtVec.begin(), tausIdxPtVec.end()); // sort if multiple taus
     int tauIdx = tausIdxPtVec.back().second; // min iso --> max MVA score
-    tau = (*tauHandle)[tauIdx];
+    tau = (*tauHandle)[tauIdx]; // store most isolated tau that wil be used by the Ntuplizer
 
 
     // ----------------- b-jets veto ---------------------
     Handle<pat::JetRefVector> bjetHandle;
     iEvent.getByToken (_bjetsTag, bjetHandle);
 
-    for(unsigned int ijet = 0; ijet < bjetHandle->size(); ijet++){
-
-      const pat::JetRef bjet = (*bjetHandle)[ijet];
-      if( deltaR(*mu,*bjet)>0.5 && deltaR(*tau,*bjet)>0.5 ) return false;
-      
+    for(unsigned int ijet = 0; ijet < bjetHandle->size(); ijet++)
+    {
+        const pat::JetRef bjet = (*bjetHandle)[ijet];
+        if( deltaR(*mu,*bjet)>0.5 && deltaR(*tau,*bjet)>0.5 ) return false;
     }
-      
 
+    // store taus and muons to be used by the Ntuplizer
     resultTau->push_back (tau);
     resultMuon->push_back (mu);
     iEvent.put(std::move(resultMuon));
@@ -143,7 +136,7 @@ bool TauTagAndProbeFilter::filter(edm::Event & iEvent, edm::EventSetup const& iS
     return true;
 }
 
-float TauTagAndProbeFilter::ComputeMT (math::XYZTLorentzVector visP4, const pat::MET& met)
+float TauTagAndProbeFilterRun3::ComputeMT (math::XYZTLorentzVector visP4, const pat::MET& met)
 {
   math::XYZTLorentzVector METP4 (met.pt()*TMath::Cos(met.phi()), met.pt()*TMath::Sin(met.phi()), 0, met.pt());
   float scalSum = met.pt() + visP4.pt();
@@ -155,6 +148,6 @@ float TauTagAndProbeFilter::ComputeMT (math::XYZTLorentzVector visP4, const pat:
 }
 
 #include <FWCore/Framework/interface/MakerMacros.h>
-DEFINE_FWK_MODULE(TauTagAndProbeFilter);
+DEFINE_FWK_MODULE(TauTagAndProbeFilterRun3);
 
 #endif

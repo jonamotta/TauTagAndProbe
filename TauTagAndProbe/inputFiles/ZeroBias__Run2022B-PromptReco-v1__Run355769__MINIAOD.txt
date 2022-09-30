@@ -1,0 +1,15 @@
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/e34e706c-b7f7-4505-bfec-0e2fcde4dae0.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/ca09fdfa-13c4-41c5-ab7f-e63ee9494f7e.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/d5d41e37-907b-4e7e-9111-2a690ddbff00.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/c0e6707e-0256-40b0-bdce-787411092570.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/98b2c1ef-a5a6-433d-a5e6-cd8df1d17415.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/b2959e26-7856-4ed5-84f2-5aacb02b4505.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/c387f66b-b10a-4b47-9f2d-63f6d9e4b60b.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/994f091a-9385-4081-ae12-24533eab2e01.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/406da52e-3df0-4d95-a8cb-b6cb04fe3018.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/6ac0a20d-3755-467a-aee6-a4f2647ae2f3.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/236fdc15-3cdf-4838-b2ab-be6d2eff41fa.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/bd0b9334-d08e-404d-93e8-e61b30d73894.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/a390e296-5ff1-4402-9ffb-1123ad984f01.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/5a0c0df1-06c7-4791-9bc5-694fa0d3a2fe.root
+/store/data/Run2022B/ZeroBias/MINIAOD/PromptReco-v1/000/355/769/00000/a5557251-8e46-4796-b42e-c1e7352d9669.root

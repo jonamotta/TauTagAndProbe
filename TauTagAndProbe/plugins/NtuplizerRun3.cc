@@ -1,5 +1,5 @@
-#ifndef NTUPLIZER_H
-#define NTUPLIZER_H
+#ifndef NTUPLIZERRUN3_H
+#define NTUPLIZERRUN3_H
 
 #include <cmath>
 #include <vector>
@@ -55,12 +55,12 @@
 ██████  ███████  ██████ ███████ ██   ██ ██   ██ ██   ██    ██    ██  ██████  ██   ████
 */
 
-class Ntuplizer : public edm::EDAnalyzer {
+class NtuplizerRun3 : public edm::EDAnalyzer {
     public:
         /// Constructor
-        explicit Ntuplizer(const edm::ParameterSet&);
+        explicit NtuplizerRun3(const edm::ParameterSet&);
         /// Destructor
-        virtual ~Ntuplizer();
+        virtual ~NtuplizerRun3();
 
     private:
         //----edm control---
@@ -72,7 +72,7 @@ class Ntuplizer : public edm::EDAnalyzer {
         void Initialize();
         bool hasFilters(const pat::TriggerObjectStandAlone&  obj , const std::vector<std::string>& filtersToLookFor);
         int GenIndex(const pat::TauRef& tau, const edm::View<pat::GenericParticle>* genparts);
-  float ComputeMT (math::XYZTLorentzVector visP4, const pat::MET& met);
+        float ComputeMT (math::XYZTLorentzVector visP4, const pat::MET& met);
 
         bool _isMC;
 
@@ -100,28 +100,29 @@ class Ntuplizer : public edm::EDAnalyzer {
         bool _byLooseCombinedIsolationDeltaBetaCorr3Hits;
         bool _byMediumCombinedIsolationDeltaBetaCorr3Hits;
         bool _byTightCombinedIsolationDeltaBetaCorr3Hits;
-        bool _byVLooseIsolationMVArun2v1DBoldDMwLT;
-        bool _byLooseIsolationMVArun2v1DBoldDMwLT;
-        bool _byMediumIsolationMVArun2v1DBoldDMwLT;
-        bool _byTightIsolationMVArun2v1DBoldDMwLT;
-        bool _byVTightIsolationMVArun2v1DBoldDMwLT;
-        bool _byVLooseIsolationMVArun2v1DBnewDMwLT;
-        bool _byLooseIsolationMVArun2v1DBnewDMwLT;
-        bool _byMediumIsolationMVArun2v1DBnewDMwLT;
-        bool _byTightIsolationMVArun2v1DBnewDMwLT;
-        bool _byVTightIsolationMVArun2v1DBnewDMwLT;       
-        bool _byLooseIsolationMVArun2v1DBdR03oldDMwLT;
-        bool _byMediumIsolationMVArun2v1DBdR03oldDMwLT;
-        bool _byTightIsolationMVArun2v1DBdR03oldDMwLT;
-        bool _byVTightIsolationMVArun2v1DBdR03oldDMwLT;
+        bool _byVVVLooseDeepTau2017v2p1VSe;
+        bool _byVVLooseDeepTau2017v2p1VSe;
+        bool _byVLooseDeepTau2017v2p1VSe;
+        bool _byLooseDeepTau2017v2p1VSe;
+        bool _byMediumDeepTau2017v2p1VSe;
+        bool _byTightDeepTau2017v2p1VSe;
+        bool _byVTightDeepTau2017v2p1VSe;
+        bool _byVVTightDeepTau2017v2p1VSe;
+        bool _byVVVLooseDeepTau2017v2p1VSjet;
+        bool _byVVLooseDeepTau2017v2p1VSjet;
+        bool _byVLooseDeepTau2017v2p1VSjet;
+        bool _byLooseDeepTau2017v2p1VSjet;
+        bool _byMediumDeepTau2017v2p1VSjet;
+        bool _byTightDeepTau2017v2p1VSjet;
+        bool _byVTightDeepTau2017v2p1VSjet;
+        bool _byVVTightDeepTau2017v2p1VSjet;
+        bool _byVLooseDeepTau2017v2p1VSmu;
+        bool _byLooseDeepTau2017v2p1VSmu;
+        bool _byMediumDeepTau2017v2p1VSmu;
+        bool _byTightDeepTau2017v2p1VSmu;
           
         bool _againstMuonLoose3;
         bool _againstMuonTight3;
-        bool _againstElectronVLooseMVA6;
-        bool _againstElectronLooseMVA6;
-        bool _againstElectronMediumMVA6;
-        bool _againstElectronTightMVA6;
-        bool _againstElectronVTightMVA6;
 
         float _hltPt;
         float _hltEta;
@@ -171,7 +172,7 @@ class Ntuplizer : public edm::EDAnalyzer {
         float _MET;
         int _Nvtx;
         float _nTruePU;
-		
+
         edm::EDGetTokenT<GenEventInfoProduct> _genTag;
         edm::EDGetTokenT<edm::View<pat::GenericParticle> > _genPartTag;
 
@@ -212,7 +213,7 @@ class Ntuplizer : public edm::EDAnalyzer {
 */
 
 // ----Constructor and Destructor -----
-Ntuplizer::Ntuplizer(const edm::ParameterSet& iConfig) :
+NtuplizerRun3::NtuplizerRun3(const edm::ParameterSet& iConfig) :
 _genTag         (consumes<GenEventInfoProduct>                    (iConfig.getParameter<edm::InputTag>("genCollection"))),
 _genPartTag     (consumes<edm::View<pat::GenericParticle>>        (iConfig.getParameter<edm::InputTag>("genPartCollection"))),
 _muonsTag       (consumes<pat::MuonRefVector>                     (iConfig.getParameter<edm::InputTag>("muons"))),
@@ -223,15 +224,14 @@ _triggerBits    (consumes<edm::TriggerResults>                    (iConfig.getPa
 _L1TauTag       (consumes<l1t::TauBxCollection>                   (iConfig.getParameter<edm::InputTag>("L1Tau"))),
 _L1EmuTauTag    (consumes<l1t::TauBxCollection>                   (iConfig.getParameter<edm::InputTag>("L1EmuTau"))),
 _VtxTag         (consumes<std::vector<reco::Vertex>>              (iConfig.getParameter<edm::InputTag>("Vertexes"))),
-_puTag			(consumes<std::vector<PileupSummaryInfo>>		  (iConfig.getParameter<edm::InputTag>("puInfo"))),
+_puTag          (consumes<std::vector<PileupSummaryInfo>>         (iConfig.getParameter<edm::InputTag>("puInfo"))),
 _hltL2CaloJet_ForIsoPix_Tag(consumes<reco::CaloJetCollection>     (iConfig.getParameter<edm::InputTag>("L2CaloJet_ForIsoPix_Collection"))),
 _hltL2CaloJet_ForIsoPix_IsoTag(consumes<reco::JetTagCollection>   (iConfig.getParameter<edm::InputTag>("L2CaloJet_ForIsoPix_IsoCollection")))
 {
 
-     _isMC = iConfig.getParameter<bool>("isMC");
+    _isMC = iConfig.getParameter<bool>("isMC");
 
-
-    _hltPrescale = new HLTPrescaleProvider(iConfig,consumesCollector(),*this);
+    _hltPrescale = new HLTPrescaleProvider(iConfig, consumesCollector(), *this);
     
     _treeName = iConfig.getParameter<std::string>("treeName");
     _processName = iConfig.getParameter<edm::InputTag>("triggerResultsLabel");
@@ -252,7 +252,7 @@ _hltL2CaloJet_ForIsoPix_IsoTag(consumes<reco::JetTagCollection>   (iConfig.getPa
         pSet.leg1 = parameterSet.getParameter<int>("leg1");
         pSet.leg2 = parameterSet.getParameter<int>("leg2");
         _parameters.push_back(pSet);
-	
+    
         _triggerNamesTree -> Fill();
     }
 
@@ -273,12 +273,12 @@ _hltL2CaloJet_ForIsoPix_IsoTag(consumes<reco::JetTagCollection>   (iConfig.getPa
     return;
 }
 
-Ntuplizer::~Ntuplizer()
+NtuplizerRun3::~NtuplizerRun3()
 {
     delete _hltPrescale;
 }
 
-void Ntuplizer::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
+void NtuplizerRun3::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
 {
     Bool_t changedConfig = false;
 
@@ -299,7 +299,7 @@ void Ntuplizer::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
         bool found = false;
         for(unsigned int j=0; j < triggerNames.size(); j++)
         {
-	  //std::cout << triggerNames[j] << std::endl;
+      //std::cout << triggerNames[j] << std::endl;
             if (triggerNames[j].find(hltPath) != std::string::npos) {
                 found = true;
                 parameter.hltPathIndex = j;
@@ -318,7 +318,7 @@ void Ntuplizer::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
         bool found = false;
         for(unsigned int j=0; j < triggerNames.size(); j++)
         {
-	  // std::cout << triggerNames[j] << std::endl;
+      // std::cout << triggerNames[j] << std::endl;
             if (triggerNames[j].find(hltPath) != std::string::npos) {
                 found = true;
                 parameter.hltPathIndex = j;
@@ -331,7 +331,7 @@ void Ntuplizer::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
 
 }
 
-void Ntuplizer::Initialize() {
+void NtuplizerRun3::Initialize() {
     _indexevents = 0;
     _runNumber = 0;
     _lumi = 0;
@@ -350,28 +350,29 @@ void Ntuplizer::Initialize() {
     _byLooseCombinedIsolationDeltaBetaCorr3Hits = 0;
     _byMediumCombinedIsolationDeltaBetaCorr3Hits = 0;
     _byTightCombinedIsolationDeltaBetaCorr3Hits = 0;
-    _byVLooseIsolationMVArun2v1DBoldDMwLT = 0;
-    _byLooseIsolationMVArun2v1DBoldDMwLT = 0;
-    _byMediumIsolationMVArun2v1DBoldDMwLT = 0;
-    _byTightIsolationMVArun2v1DBoldDMwLT = 0;
-    _byVTightIsolationMVArun2v1DBoldDMwLT = 0;
-    _byVLooseIsolationMVArun2v1DBnewDMwLT = 0;
-    _byLooseIsolationMVArun2v1DBnewDMwLT = 0;
-    _byMediumIsolationMVArun2v1DBnewDMwLT = 0;
-    _byTightIsolationMVArun2v1DBnewDMwLT = 0;
-    _byVTightIsolationMVArun2v1DBnewDMwLT = 0;    
-    _byLooseIsolationMVArun2v1DBdR03oldDMwLT = 0;
-    _byMediumIsolationMVArun2v1DBdR03oldDMwLT = 0;
-    _byTightIsolationMVArun2v1DBdR03oldDMwLT = 0;
-    _byVTightIsolationMVArun2v1DBdR03oldDMwLT = 0;
+    _byVVVLooseDeepTau2017v2p1VSe = 0;
+    _byVVLooseDeepTau2017v2p1VSe = 0;
+    _byVLooseDeepTau2017v2p1VSe = 0;
+    _byLooseDeepTau2017v2p1VSe = 0;
+    _byMediumDeepTau2017v2p1VSe = 0;
+    _byTightDeepTau2017v2p1VSe = 0;
+    _byVTightDeepTau2017v2p1VSe = 0;
+    _byVVTightDeepTau2017v2p1VSe = 0;
+    _byVVVLooseDeepTau2017v2p1VSjet = 0;
+    _byVVLooseDeepTau2017v2p1VSjet = 0;
+    _byVLooseDeepTau2017v2p1VSjet = 0;
+    _byLooseDeepTau2017v2p1VSjet = 0;
+    _byMediumDeepTau2017v2p1VSjet = 0;
+    _byTightDeepTau2017v2p1VSjet = 0;
+    _byVTightDeepTau2017v2p1VSjet = 0;
+    _byVVTightDeepTau2017v2p1VSjet = 0;
+    _byVLooseDeepTau2017v2p1VSmu = 0;
+    _byLooseDeepTau2017v2p1VSmu = 0;
+    _byMediumDeepTau2017v2p1VSmu = 0;
+    _byTightDeepTau2017v2p1VSmu = 0;
     
     _againstMuonLoose3 = 0;
     _againstMuonTight3 = 0;
-    _againstElectronVLooseMVA6 = 0;
-    _againstElectronLooseMVA6 = 0;
-    _againstElectronMediumMVA6 = 0;
-    _againstElectronTightMVA6 = 0;
-    _againstElectronVTightMVA6 = 0;
     
     _muonPt = -1.;
     _muonEta = -1.;
@@ -420,7 +421,7 @@ void Ntuplizer::Initialize() {
 }
 
 
-void Ntuplizer::beginJob()
+void NtuplizerRun3::beginJob()
 {
     edm::Service<TFileService> fs;
     _tree = fs -> make<TTree>(this -> _treeName.c_str(), this -> _treeName.c_str());
@@ -445,29 +446,29 @@ void Ntuplizer::beginJob()
     _tree -> Branch("byLooseCombinedIsolationDeltaBetaCorr3Hits", &_byLooseCombinedIsolationDeltaBetaCorr3Hits, "byLooseCombinedIsolationDeltaBetaCorr3Hits/O");
     _tree -> Branch("byMediumCombinedIsolationDeltaBetaCorr3Hits", &_byMediumCombinedIsolationDeltaBetaCorr3Hits, "byMediumCombinedIsolationDeltaBetaCorr3Hits/O");
     _tree -> Branch("byTightCombinedIsolationDeltaBetaCorr3Hits", &_byTightCombinedIsolationDeltaBetaCorr3Hits, "byTightCombinedIsolationDeltaBetaCorr3Hits/O");
-    _tree -> Branch("byVLooseIsolationMVArun2v1DBoldDMwLT", &_byVLooseIsolationMVArun2v1DBoldDMwLT, "byVLooseIsolationMVArun2v1DBoldDMwLT/O");
-    _tree -> Branch("byLooseIsolationMVArun2v1DBoldDMwLT", &_byLooseIsolationMVArun2v1DBoldDMwLT, "byLooseIsolationMVArun2v1DBoldDMwLT/O");
-    _tree -> Branch("byMediumIsolationMVArun2v1DBoldDMwLT", &_byMediumIsolationMVArun2v1DBoldDMwLT, "byMediumIsolationMVArun2v1DBoldDMwLT/O");
-    _tree -> Branch("byTightIsolationMVArun2v1DBoldDMwLT", &_byTightIsolationMVArun2v1DBoldDMwLT, "byTightIsolationMVArun2v1DBoldDMwLT/O");
-    _tree -> Branch("byVTightIsolationMVArun2v1DBoldDMwLT", &_byVTightIsolationMVArun2v1DBoldDMwLT, "byVTightIsolationMVArun2v1DBoldDMwLT/O");
-    _tree -> Branch("byVLooseIsolationMVArun2v1DBnewDMwLT", &_byVLooseIsolationMVArun2v1DBnewDMwLT, "byVLooseIsolationMVArun2v1DBnewDMwLT/O");
-    _tree -> Branch("byLooseIsolationMVArun2v1DBnewDMwLT", &_byLooseIsolationMVArun2v1DBnewDMwLT, "byLooseIsolationMVArun2v1DBnewDMwLT/O");
-    _tree -> Branch("byMediumIsolationMVArun2v1DBnewDMwLT", &_byMediumIsolationMVArun2v1DBnewDMwLT, "byMediumIsolationMVArun2v1DBnewDMwLT/O");
-    _tree -> Branch("byTightIsolationMVArun2v1DBnewDMwLT", &_byTightIsolationMVArun2v1DBnewDMwLT, "byTightIsolationMVArun2v1DBnewDMwLT/O");
-    _tree -> Branch("byVTightIsolationMVArun2v1DBnewDMwLT", &_byVTightIsolationMVArun2v1DBnewDMwLT, "byVTightIsolationMVArun2v1DBnewDMwLT/O");    
-    _tree -> Branch("byLooseIsolationMVArun2v1DBdR03oldDMwLT", &_byLooseIsolationMVArun2v1DBdR03oldDMwLT, "byLooseIsolationMVArun2v1DBdR03oldDMwLT/O");
-    _tree -> Branch("byMediumIsolationMVArun2v1DBdR03oldDMwLT", &_byMediumIsolationMVArun2v1DBdR03oldDMwLT, "byMediumIsolationMVArun2v1DBdR03oldDMwLT/O");
-    _tree -> Branch("byTightIsolationMVArun2v1DBdR03oldDMwLT", &_byTightIsolationMVArun2v1DBdR03oldDMwLT, "byTightIsolationMVArun2v1DBdR03oldDMwLT/O");
-    _tree -> Branch("byVTightIsolationMVArun2v1DBdR03oldDMwLT", &_byVTightIsolationMVArun2v1DBdR03oldDMwLT, "byVTightIsolationMVArun2v1DBdR03oldDMwLT/O");
-    
+    _tree -> Branch("byVVVLooseDeepTau2017v2p1VSe", &_byVVVLooseDeepTau2017v2p1VSe, "byVVVLooseDeepTau2017v2p1VSe/O");
+    _tree -> Branch("byVVLooseDeepTau2017v2p1VSe", &_byVVLooseDeepTau2017v2p1VSe, "byVVLooseDeepTau2017v2p1VSe/O");
+    _tree -> Branch("byVLooseDeepTau2017v2p1VSe", &_byVLooseDeepTau2017v2p1VSe, "byVLooseDeepTau2017v2p1VSe/O");
+    _tree -> Branch("byLooseDeepTau2017v2p1VSe", &_byLooseDeepTau2017v2p1VSe, "byLooseDeepTau2017v2p1VSe/O");
+    _tree -> Branch("byMediumDeepTau2017v2p1VSe", &_byMediumDeepTau2017v2p1VSe, "byMediumDeepTau2017v2p1VSe/O");
+    _tree -> Branch("byTightDeepTau2017v2p1VSe", &_byTightDeepTau2017v2p1VSe, "byTightDeepTau2017v2p1VSe/O");
+    _tree -> Branch("byVTightDeepTau2017v2p1VSe", &_byVTightDeepTau2017v2p1VSe, "byVTightDeepTau2017v2p1VSe/O");
+    _tree -> Branch("byVVTightDeepTau2017v2p1VSe", &_byVVTightDeepTau2017v2p1VSe, "byVVTightDeepTau2017v2p1VSe/O");
+    _tree -> Branch("byVVVLooseDeepTau2017v2p1VSjet", &_byVVVLooseDeepTau2017v2p1VSjet, "byVVVLooseDeepTau2017v2p1VSjet/O");
+    _tree -> Branch("byVVLooseDeepTau2017v2p1VSjet", &_byVVLooseDeepTau2017v2p1VSjet, "byVVLooseDeepTau2017v2p1VSjet/O");    
+    _tree -> Branch("byVLooseDeepTau2017v2p1VSjet", &_byVLooseDeepTau2017v2p1VSjet, "byVLooseDeepTau2017v2p1VSjet/O");
+    _tree -> Branch("byLooseDeepTau2017v2p1VSjet", &_byLooseDeepTau2017v2p1VSjet, "byLooseDeepTau2017v2p1VSjet/O");
+    _tree -> Branch("byMediumDeepTau2017v2p1VSjet", &_byMediumDeepTau2017v2p1VSjet, "byMediumDeepTau2017v2p1VSjet/O");
+    _tree -> Branch("byTightDeepTau2017v2p1VSjet", &_byTightDeepTau2017v2p1VSjet, "byTightDeepTau2017v2p1VSjet/O");
+    _tree -> Branch("byVTightDeepTau2017v2p1VSjet", &_byVTightDeepTau2017v2p1VSjet, "byVTightDeepTau2017v2p1VSjet/O");
+    _tree -> Branch("byVVTightDeepTau2017v2p1VSjet", &_byVVTightDeepTau2017v2p1VSjet, "byVVTightDeepTau2017v2p1VSjet/O");
+    _tree -> Branch("byVLooseDeepTau2017v2p1VSmu", &_byVLooseDeepTau2017v2p1VSmu, "byVLooseDeepTau2017v2p1VSmu/O");
+    _tree -> Branch("byLooseDeepTau2017v2p1VSmu", &_byLooseDeepTau2017v2p1VSmu, "byLooseDeepTau2017v2p1VSmu/O");
+    _tree -> Branch("byMediumDeepTau2017v2p1VSmu", &_byMediumDeepTau2017v2p1VSmu, "byMediumDeepTau2017v2p1VSmu/O");
+    _tree -> Branch("byTightDeepTau2017v2p1VSmu", &_byTightDeepTau2017v2p1VSmu, "byTightDeepTau2017v2p1VSmu/O");
     
     _tree -> Branch("againstMuonLoose3", &_againstMuonLoose3, "againstMuonLoose3/O");;
     _tree -> Branch("againstMuonTight3", &_againstMuonTight3, "againstMuonTight3/O");
-    _tree -> Branch("againstElectronVLooseMVA6", &_againstElectronVLooseMVA6, "againstElectronVLooseMVA6/O");
-    _tree -> Branch("againstElectronLooseMVA6", &_againstElectronLooseMVA6, "againstElectronLooseMVA6/O");
-    _tree -> Branch("againstElectronMediumMVA6", &_againstElectronMediumMVA6, "againstElectronMediumMVA6/O");
-    _tree -> Branch("againstElectronTightMVA6", &_againstElectronTightMVA6, "againstElectronTightMVA6/O");
-    _tree -> Branch("againstElectronVTightMVA6", &_againstElectronVTightMVA6, "againstElectronVTightMVA6/O");
     
     _tree -> Branch("muonPt",  &_muonPt,  "muonPt/F");
     _tree -> Branch("muonEta", &_muonEta, "muonEta/F");
@@ -529,27 +530,26 @@ void Ntuplizer::beginJob()
 }
 
 
-void Ntuplizer::endJob()
+void NtuplizerRun3::endJob()
 {
     return;
 }
 
 
-void Ntuplizer::endRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
+void NtuplizerRun3::endRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
 {
     return;
 }
 
 
-void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
+void NtuplizerRun3::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 {
     this -> Initialize();
 
     _indexevents = iEvent.id().event();
     _runNumber = iEvent.id().run();
     _lumi = iEvent.luminosityBlock();
-    if(!_isMC)      
-      _PS_column = _hltPrescale->prescaleSet(iEvent,eSetup);
+    if(!_isMC) _PS_column = _hltPrescale->prescaleSet(iEvent,eSetup);
 
     edm::Handle<GenEventInfoProduct> genEvt;
     try {iEvent.getByToken(_genTag, genEvt);}  catch (...) {;}
@@ -563,14 +563,13 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
     edm::Handle<pat::TriggerObjectStandAloneCollection> triggerObjects;
     edm::Handle<edm::TriggerResults> triggerBits;
     edm::Handle<std::vector<reco::Vertex> >  vertexes;
-   	edm::Handle<std::vector<PileupSummaryInfo>> puInfo;
+    edm::Handle<std::vector<PileupSummaryInfo>> puInfo;
 
     edm::Handle< reco::CaloJetCollection > L2CaloJets_ForIsoPix_Handle;
     edm::Handle< reco::JetTagCollection > L2CaloJets_ForIsoPix_IsoHandle;
 
 
-    if(_isMC)
-      iEvent.getByToken(_genPartTag, genPartHandle);
+    if(_isMC) iEvent.getByToken(_genPartTag, genPartHandle);
     iEvent.getByToken(_muonsTag, muonHandle);
     iEvent.getByToken(_tauTag,   tauHandle);
     iEvent.getByToken (_metTag, metHandle);
@@ -582,68 +581,64 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
     try {iEvent.getByToken(_hltL2CaloJet_ForIsoPix_Tag, L2CaloJets_ForIsoPix_Handle);}  catch (...) {;}
     try {iEvent.getByToken(_hltL2CaloJet_ForIsoPix_IsoTag, L2CaloJets_ForIsoPix_IsoHandle);}  catch (...) {;}
 
-
-
+    // #############################################################################
     //! TagAndProbe on HLT taus
     const edm::TriggerNames &names = iEvent.triggerNames(*triggerBits);
     const pat::TauRef tau = (*tauHandle)[0] ;
     const pat::MuonRef muon = (*muonHandle)[0] ;
     const pat::MET& met = (*metHandle)[0];
 
+    // store MET and transverse mass (to reject W+jets)
     _MET = met.pt();
     _mT = this->ComputeMT (muon->p4(), met);
 
+    // store opposite signedness of muon and tau
     if(muonHandle.isValid()) _isOS = (muon -> charge() / tau -> charge() < 0) ? true : false;
-
 
     _tauTriggerBitSet.reset();
 
+    // loop over the hlt trigger objects to do tag and probe
     bool foundMuTrigger = false;
-
     for (pat::TriggerObjectStandAlone  obj : *triggerObjects)
     {
+        obj.unpackPathNames(names);
+        const edm::TriggerNames::Strings& triggerNames = names.triggerNames();
 
-      obj.unpackPathNames(names);
-      const edm::TriggerNames::Strings& triggerNames = names.triggerNames();
-
-      if(obj.hasTriggerObjectType(trigger::TriggerMuon)){
-
-        const float dR = deltaR (*muon, obj);
-        if ( dR < 0.5 && fabs(obj.eta())<2.1 ){
-
-	  for (const tParameterSet& parameter : _parameters_Tag)
+        // check if the trigger object is a muon trigger object
+        if(obj.hasTriggerObjectType(trigger::TriggerMuon))
+        {
+            // do geometrical match of the offline muon with the trigger objetc and set flag for its existence (if it does)
+            const float dR = deltaR (*muon, obj);
+            if ( dR < 0.5 && fabs(obj.eta())<2.1 )
             {
-	      if ((parameter.hltPathIndex >= 0)&&(obj.hasPathName(triggerNames[parameter.hltPathIndex], true, false)))	
-		foundMuTrigger = true;
-	    }
-
-	}
-
-      }
+                // check that the trigger object has the wanted TAG path (loops over TAG paths specified in the cfg file)
+                for (const tParameterSet& parameter : _parameters_Tag)
+                {
+                    if ((parameter.hltPathIndex >= 0)&&(obj.hasPathName(triggerNames[parameter.hltPathIndex], true, false))) foundMuTrigger = true; //set tag existence flag
+                }
+            }
+        }
       
-
-
+        // look for geometrical match of hlt trigger object with offline tau
         const float dR = deltaR (*tau, obj);
         if ( dR < 0.5)
         {
+            // store matched and trigger type flags
             _isMatched = true;
-            _hasTriggerTauType = obj.hasTriggerObjectType(trigger::TriggerTau);	   
+            _hasTriggerTauType = obj.hasTriggerObjectType(trigger::TriggerTau);    
             _hasTriggerMuonType = obj.hasTriggerObjectType(trigger::TriggerMuon);
 
-            //Looking for the path
+            // check that the trigger object has the wanted probe path (loops over probe paths specified in the cfg file)
             unsigned int x = 0;
             bool foundTrigger = false;
             for (const tParameterSet& parameter : _parameters)
             {
-	      if ((parameter.hltPathIndex >= 0)&&(obj.hasPathName(triggerNames[parameter.hltPathIndex], true, false)))
-
+                if ((parameter.hltPathIndex >= 0)&&(obj.hasPathName(triggerNames[parameter.hltPathIndex], true, false)))
                 {
-
                     foundTrigger = true;
-                    //Path found, now looking for the label 1, if present in the parameter set                    
-                    //Retrieving filter list for the event
 
-                    const std::vector<std::string>& filters = (parameter.leg1 == 15)? (parameter.hltFilters1):(parameter.hltFilters2);
+                    // check filter list for the taus and store if satisfied (as specified in the cfg file)
+                    const std::vector<std::string>& filters = (parameter.leg1 == 15) ? (parameter.hltFilters1):(parameter.hltFilters2);
                     if (this -> hasFilters(obj, filters))
                     {
                         _hltPt = obj.pt();
@@ -656,73 +651,69 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
             }
             if (foundTrigger) _foundJet++;
 
-	    const std::vector<std::string>& L2CaloJetIsoPix_filters = {"hltL2TauIsoFilter"};
-	    if (this -> hasFilters(obj, L2CaloJetIsoPix_filters) && obj.pt()>_hltL2CaloJetIsoPixPt){
-	      _hltL2CaloJetIsoPixPt = obj.pt();
-	      _hltL2CaloJetIsoPixEta = obj.eta();
-	      _hltL2CaloJetIsoPixPhi = obj.phi();
-	    }
+            // check for additional requirements on the taus
+            const std::vector<std::string>& L2CaloJetIsoPix_filters = {"hltL2TauIsoFilter"};
+            if (this -> hasFilters(obj, L2CaloJetIsoPix_filters) && obj.pt()>_hltL2CaloJetIsoPixPt){
+              _hltL2CaloJetIsoPixPt = obj.pt();
+              _hltL2CaloJetIsoPixEta = obj.eta();
+              _hltL2CaloJetIsoPixPhi = obj.phi();
+            }
 
-	    const std::vector<std::string>& PFTauTrack_filters = {"hltPFTauTrack"};
-	    if (this -> hasFilters(obj, PFTauTrack_filters) && obj.pt()>_hltPFTauTrackPt){
-	      _hltPFTauTrackPt = obj.pt();
-	      _hltPFTauTrackEta = obj.eta();
-	      _hltPFTauTrackPhi = obj.phi();
-	    }
+            const std::vector<std::string>& PFTauTrack_filters = {"hltPFTauTrack"};
+            if (this -> hasFilters(obj, PFTauTrack_filters) && obj.pt()>_hltPFTauTrackPt){
+              _hltPFTauTrackPt = obj.pt();
+              _hltPFTauTrackEta = obj.eta();
+              _hltPFTauTrackPhi = obj.phi();
+            }
 
-	    const std::vector<std::string>& PFTauTrackReg_filters = {"hltPFTauTrackReg"};
-	    if (this -> hasFilters(obj, PFTauTrackReg_filters) && obj.pt()>_hltPFTauTrackRegPt){
-	      _hltPFTauTrackRegPt = obj.pt();
-	      _hltPFTauTrackRegEta = obj.eta();
-	      _hltPFTauTrackRegPhi = obj.phi();
-	    }
+            const std::vector<std::string>& PFTauTrackReg_filters = {"hltPFTauTrackReg"};
+            if (this -> hasFilters(obj, PFTauTrackReg_filters) && obj.pt()>_hltPFTauTrackRegPt){
+              _hltPFTauTrackRegPt = obj.pt();
+              _hltPFTauTrackRegEta = obj.eta();
+              _hltPFTauTrackRegPhi = obj.phi();
+            }
 
-	    const std::vector<std::string>& PFTau35TrackPt1Reg_filters = {"hltSinglePFTau35TrackPt1Reg"};
-	    if (this -> hasFilters(obj, PFTau35TrackPt1Reg_filters) && obj.pt()>_hltPFTau35TrackPt1RegPt){
-	      _hltPFTau35TrackPt1RegPt = obj.pt();
-	      _hltPFTau35TrackPt1RegEta = obj.eta();
-	      _hltPFTau35TrackPt1RegPhi = obj.phi();
-	    }
-
-
+            const std::vector<std::string>& PFTau35TrackPt1Reg_filters = {"hltSinglePFTau35TrackPt1Reg"};
+            if (this -> hasFilters(obj, PFTau35TrackPt1Reg_filters) && obj.pt()>_hltPFTau35TrackPt1RegPt){
+              _hltPFTau35TrackPt1RegPt = obj.pt();
+              _hltPFTau35TrackPt1RegEta = obj.eta();
+              _hltPFTau35TrackPt1RegPhi = obj.phi();
+            }
         }
     }
 
-
-    if(L2CaloJets_ForIsoPix_Handle.isValid() && L2CaloJets_ForIsoPix_IsoHandle.isValid()){
-
-      for (auto const &  jet : *L2CaloJets_ForIsoPix_IsoHandle){
-	edm::Ref<reco::CaloJetCollection> jetRef = edm::Ref<reco::CaloJetCollection>(L2CaloJets_ForIsoPix_Handle,jet.first.key());
-	
-	const float dR = deltaR (*tau, *(jet.first));
-	
-	if ( dR < 0.5 && jet.first->pt()>_hltL2CaloJetPt)
-	  {
-	    _hltL2CaloJetPt = jet.first->pt();
-	    _hltL2CaloJetEta = jet.first->eta();
-	    _hltL2CaloJetPhi = jet.first->phi();
-	    _hltL2CaloJetIso = jet.second;
-	  }
-
-      }
-
+    // store the information of the jet geometrically matcehd with the tau
+    if(L2CaloJets_ForIsoPix_Handle.isValid() && L2CaloJets_ForIsoPix_IsoHandle.isValid())
+    {
+        for (auto const &  jet : *L2CaloJets_ForIsoPix_IsoHandle)
+        {
+            edm::Ref<reco::CaloJetCollection> jetRef = edm::Ref<reco::CaloJetCollection>(L2CaloJets_ForIsoPix_Handle,jet.first.key());
+    
+            const float dR = deltaR (*tau, *(jet.first));
+            if ( dR < 0.5 && jet.first->pt()>_hltL2CaloJetPt)
+            {
+                _hltL2CaloJetPt = jet.first->pt();
+                _hltL2CaloJetEta = jet.first->eta();
+                _hltL2CaloJetPhi = jet.first->phi();
+                _hltL2CaloJetIso = jet.second;
+            }
+        }
     }
 
-
-
+    // #############################################################################
     //! TagAndProbe on L1T taus
-
     edm::Handle< BXVector<l1t::Tau> >  L1TauHandle;
     iEvent.getByToken(_L1TauTag, L1TauHandle);
 
     float minDR = 0.5; //Uncomment for new match algo
 
+    // loop on L1 taus and do geometrical match with offline tau
     for (l1t::TauBxCollection::const_iterator bx0TauIt = L1TauHandle->begin(0); bx0TauIt != L1TauHandle->end(0) ; bx0TauIt++)
     {
         const float dR = deltaR(*tau, *bx0TauIt);
-	const l1t::Tau& l1tTau = *bx0TauIt;
+        const l1t::Tau& l1tTau = *bx0TauIt;
 
-	//cout<<"FW Tau, pT = "<<l1tTau.pt()<<", eta = "<<l1tTau.eta()<<", phi = "<<l1tTau.phi()<<endl;
+        //cout<<"FW Tau, pT = "<<l1tTau.pt()<<", eta = "<<l1tTau.eta()<<", phi = "<<l1tTau.phi()<<endl;
 
         if (dR < minDR) //Uncomment for new match algo
         //if (dR < 0.5) //Uncomment for old match algo
@@ -740,36 +731,37 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
     try {iEvent.getByToken(_L1EmuTauTag, L1EmuTauHandle);} catch (...) {;}
 
     if (L1EmuTauHandle.isValid())
-      {
-	minDR = 0.5;
-	
-	for (l1t::TauBxCollection::const_iterator bx0EmuTauIt = L1EmuTauHandle->begin(0); bx0EmuTauIt != L1EmuTauHandle->end(0) ; bx0EmuTauIt++)
-	  {
-	    const float dR = deltaR(*tau, *bx0EmuTauIt);
-	    const l1t::Tau& l1tEmuTau = *bx0EmuTauIt;
-	    
-	    //cout<<"Emul Tau, pT = "<<l1tEmuTau.pt()<<", eta = "<<l1tEmuTau.eta()<<", phi = "<<l1tEmuTau.phi()<<endl;
-	    
-	    if (dR < minDR) //Uncomment for new match algo
-	      {
-		minDR = dR; //Uncomment for new match algo
-		_l1tEmuPt        = l1tEmuTau.pt();
-		_l1tEmuEta       = l1tEmuTau.eta();
-		_l1tEmuPhi       = l1tEmuTau.phi();
-		_l1tEmuIso       = l1tEmuTau.hwIso();
-		_l1tEmuNTT       = l1tEmuTau.nTT();
-		_l1tEmuQual      = l1tEmuTau.hwQual();
-		_l1tEmuHasEM     = l1tEmuTau.hasEM();
-		_l1tEmuIsMerged  = l1tEmuTau.isMerged();
-		_l1tEmuTowerIEta = l1tEmuTau.towerIEta();
-		_l1tEmuTowerIPhi = l1tEmuTau.towerIPhi();
-		_l1tEmuRawEt     = l1tEmuTau.rawEt();
-		_l1tEmuIsoEt     = l1tEmuTau.isoEt();
-		
-	      }
-	  }
-      }
+    {
+        minDR = 0.5;
+    
+        // loop on L1 Emu taus and do geometrical match with offline tau
+        for (l1t::TauBxCollection::const_iterator bx0EmuTauIt = L1EmuTauHandle->begin(0); bx0EmuTauIt != L1EmuTauHandle->end(0) ; bx0EmuTauIt++)
+        {
+            const float dR = deltaR(*tau, *bx0EmuTauIt);
+            const l1t::Tau& l1tEmuTau = *bx0EmuTauIt;
 
+            //cout<<"Emul Tau, pT = "<<l1tEmuTau.pt()<<", eta = "<<l1tEmuTau.eta()<<", phi = "<<l1tEmuTau.phi()<<endl;
+
+            if (dR < minDR) //Uncomment for new match algo
+            {
+                minDR = dR; //Uncomment for new match algo
+                _l1tEmuPt        = l1tEmuTau.pt();
+                _l1tEmuEta       = l1tEmuTau.eta();
+                _l1tEmuPhi       = l1tEmuTau.phi();
+                _l1tEmuIso       = l1tEmuTau.hwIso();
+                _l1tEmuNTT       = l1tEmuTau.nTT();
+                _l1tEmuQual      = l1tEmuTau.hwQual();
+                _l1tEmuHasEM     = l1tEmuTau.hasEM();
+                _l1tEmuIsMerged  = l1tEmuTau.isMerged();
+                _l1tEmuTowerIEta = l1tEmuTau.towerIEta();
+                _l1tEmuTowerIPhi = l1tEmuTau.towerIPhi();
+                _l1tEmuRawEt     = l1tEmuTau.rawEt();
+                _l1tEmuIsoEt     = l1tEmuTau.isoEt();
+            }
+        }
+    }
+
+    // store offline tau information
     _tauPt = tau -> pt();
     _tauEta = tau -> eta();
     _tauPhi = tau -> phi();
@@ -778,29 +770,31 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
     _byLooseCombinedIsolationDeltaBetaCorr3Hits = tau->tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits");
     _byMediumCombinedIsolationDeltaBetaCorr3Hits = tau->tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits");
     _byTightCombinedIsolationDeltaBetaCorr3Hits = tau->tauID("byTightCombinedIsolationDeltaBetaCorr3Hits");
-    _byVLooseIsolationMVArun2v1DBoldDMwLT = tau->tauID("byVLooseIsolationMVArun2v1DBoldDMwLT");
-    _byLooseIsolationMVArun2v1DBoldDMwLT = tau->tauID("byLooseIsolationMVArun2v1DBoldDMwLT");
-    _byMediumIsolationMVArun2v1DBoldDMwLT = tau->tauID("byMediumIsolationMVArun2v1DBoldDMwLT");
-    _byTightIsolationMVArun2v1DBoldDMwLT = tau->tauID("byTightIsolationMVArun2v1DBoldDMwLT");
-    _byVTightIsolationMVArun2v1DBoldDMwLT = tau->tauID("byVTightIsolationMVArun2v1DBoldDMwLT");
-    _byVLooseIsolationMVArun2v1DBnewDMwLT = tau->tauID("byVLooseIsolationMVArun2v1DBnewDMwLT");
-    _byLooseIsolationMVArun2v1DBnewDMwLT = tau->tauID("byLooseIsolationMVArun2v1DBnewDMwLT");
-    _byMediumIsolationMVArun2v1DBnewDMwLT = tau->tauID("byMediumIsolationMVArun2v1DBnewDMwLT");
-    _byTightIsolationMVArun2v1DBnewDMwLT = tau->tauID("byTightIsolationMVArun2v1DBnewDMwLT");
-    _byVTightIsolationMVArun2v1DBnewDMwLT = tau->tauID("byVTightIsolationMVArun2v1DBnewDMwLT");
-    _byLooseIsolationMVArun2v1DBdR03oldDMwLT = tau->tauID("byLooseIsolationMVArun2v1DBdR03oldDMwLT");
-    _byMediumIsolationMVArun2v1DBdR03oldDMwLT = tau->tauID("byMediumIsolationMVArun2v1DBdR03oldDMwLT");
-    _byTightIsolationMVArun2v1DBdR03oldDMwLT = tau->tauID("byTightIsolationMVArun2v1DBdR03oldDMwLT");
-    _byVTightIsolationMVArun2v1DBdR03oldDMwLT = tau->tauID("byVTightIsolationMVArun2v1DBdR03oldDMwLT");
+    _byVVVLooseDeepTau2017v2p1VSe = tau->tauID("byVVVLooseDeepTau2017v2p1VSe");
+    _byVVLooseDeepTau2017v2p1VSe = tau->tauID("byVVLooseDeepTau2017v2p1VSe");
+    _byVLooseDeepTau2017v2p1VSe = tau->tauID("byVLooseDeepTau2017v2p1VSe");
+    _byLooseDeepTau2017v2p1VSe = tau->tauID("byLooseDeepTau2017v2p1VSe");
+    _byMediumDeepTau2017v2p1VSe = tau->tauID("byMediumDeepTau2017v2p1VSe");
+    _byTightDeepTau2017v2p1VSe = tau->tauID("byTightDeepTau2017v2p1VSe");
+    _byVTightDeepTau2017v2p1VSe = tau->tauID("byVTightDeepTau2017v2p1VSe");
+    _byVVTightDeepTau2017v2p1VSe = tau->tauID("byVVTightDeepTau2017v2p1VSe");
+    _byVVVLooseDeepTau2017v2p1VSjet = tau->tauID("byVVVLooseDeepTau2017v2p1VSjet");
+    _byVVLooseDeepTau2017v2p1VSjet = tau->tauID("byVVLooseDeepTau2017v2p1VSjet");
+    _byVLooseDeepTau2017v2p1VSjet = tau->tauID("byVLooseDeepTau2017v2p1VSjet");
+    _byLooseDeepTau2017v2p1VSjet = tau->tauID("byLooseDeepTau2017v2p1VSjet");
+    _byMediumDeepTau2017v2p1VSjet = tau->tauID("byMediumDeepTau2017v2p1VSjet");
+    _byTightDeepTau2017v2p1VSjet = tau->tauID("byTightDeepTau2017v2p1VSjet");
+    _byVTightDeepTau2017v2p1VSjet = tau->tauID("byVTightDeepTau2017v2p1VSjet");
+    _byVVTightDeepTau2017v2p1VSjet = tau->tauID("byVVTightDeepTau2017v2p1VSjet");
+    _byVLooseDeepTau2017v2p1VSmu = tau->tauID("byVLooseDeepTau2017v2p1VSmu");
+    _byLooseDeepTau2017v2p1VSmu = tau->tauID("byLooseDeepTau2017v2p1VSmu");
+    _byMediumDeepTau2017v2p1VSmu = tau->tauID("byMediumDeepTau2017v2p1VSmu");
+    _byTightDeepTau2017v2p1VSmu = tau->tauID("byTightDeepTau2017v2p1VSmu");
     
     _againstMuonLoose3 = tau->tauID("againstMuonLoose3");
     _againstMuonTight3 = tau->tauID("againstMuonTight3");
-    _againstElectronVLooseMVA6 = tau->tauID("againstElectronVLooseMVA6");
-    _againstElectronLooseMVA6 = tau->tauID("againstElectronLooseMVA6");
-    _againstElectronMediumMVA6 = tau->tauID("againstElectronMediumMVA6");
-    _againstElectronTightMVA6 = tau->tauID("againstElectronTightMVA6");
-    _againstElectronVTightMVA6 = tau->tauID("againstElectronVTightMVA6");
 
+    // store offline muon information
     if(muonHandle.isValid()){
       _muonPt=muon->pt();
       _muonEta=muon->eta();
@@ -811,43 +805,37 @@ void Ntuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
     _Nvtx = vertexes->size();
     
     _nTruePU = -99;
-    	
-    if (_isMC) {
-
-      std::vector<PileupSummaryInfo>::const_iterator PVI;
-      for(PVI = puInfo->begin(); PVI != puInfo->end(); ++PVI) {
-	if(PVI->getBunchCrossing() == 0) { 
-	  float nTrueInt = PVI->getTrueNumInteractions();
-	  cout<<"nTrueInt="<<PVI->getTrueNumInteractions()<<endl;
-	  _nTruePU = nTrueInt;  
-	  //break;
-	}
-      }
-
+        
+    if (_isMC)
+    {
+        std::vector<PileupSummaryInfo>::const_iterator PVI;
+        for(PVI = puInfo->begin(); PVI != puInfo->end(); ++PVI)
+        {
+            if(PVI->getBunchCrossing() == 0)
+            { 
+                float nTrueInt = PVI->getTrueNumInteractions();
+                cout<<"nTrueInt="<<PVI->getTrueNumInteractions()<<endl;
+                _nTruePU = nTrueInt;  
+                //break;
+            }
+        }
     }
 
-  	
     _tauTriggerBits = _tauTriggerBitSet.to_ulong();
 
-    //Gen-matching
-
-    if(_isMC){
-
-      const edm::View<pat::GenericParticle>* genparts = genPartHandle.product();
-      _tau_genindex = this->GenIndex(tau,genparts);
-
+    // gen-matching
+    if(_isMC)
+    {
+        const edm::View<pat::GenericParticle>* genparts = genPartHandle.product();
+        _tau_genindex = this->GenIndex(tau,genparts);
     }
 
-
-
-    //std::cout << "++++++++++ FILL ++++++++++" << std::endl;
-
-    if(foundMuTrigger)
-      _tree -> Fill();
+    // store only if the event was triggered by the TAG paths required
+    if(foundMuTrigger) _tree -> Fill();
 
 }
 
-bool Ntuplizer::hasFilters(const pat::TriggerObjectStandAlone&  obj , const std::vector<std::string>& filtersToLookFor) {
+bool NtuplizerRun3::hasFilters(const pat::TriggerObjectStandAlone&  obj , const std::vector<std::string>& filtersToLookFor) {
 
     const std::vector<std::string>& eventLabels = obj.filterLabels();
     for (const std::string& filter : filtersToLookFor)
@@ -856,7 +844,6 @@ bool Ntuplizer::hasFilters(const pat::TriggerObjectStandAlone&  obj , const std:
         bool found = false;
         for (const std::string& label : eventLabels)
         {
-
             if (label == filter)
             {
                 //std::cout << "#### FOUND FILTER " << label << " == " << filter << " ####" << std::endl;
@@ -869,15 +856,13 @@ bool Ntuplizer::hasFilters(const pat::TriggerObjectStandAlone&  obj , const std:
     return true;
 }
 
-
-
-int Ntuplizer::GenIndex(const pat::TauRef& tau, const edm::View<pat::GenericParticle>* genparts){
-	
+int NtuplizerRun3::GenIndex(const pat::TauRef& tau, const edm::View<pat::GenericParticle>* genparts){
+    
   float dRmin = 1.0;
   int genMatchInd = -1;
 
   for(edm::View<pat::GenericParticle>::const_iterator genpart = genparts->begin(); genpart!=genparts->end();++genpart){
-	  
+      
     int flags = genpart->userInt ("generalGenFlags");    
     int apdg = abs(genpart->pdgId());
     float pT = genpart->p4().pt();
@@ -898,15 +883,15 @@ int Ntuplizer::GenIndex(const pat::TauRef& tau, const edm::View<pat::GenericPart
     if(dR<0.2 && dR<dRmin){
       dRmin = dR;
       if(apdg==11){
-	if(flags&1) genMatchInd = 1;
-	else if((flags>>5)&1) genMatchInd = 3;
+    if(flags&1) genMatchInd = 1;
+    else if((flags>>5)&1) genMatchInd = 3;
       }
       else if(apdg==13){
-	if(flags&1) genMatchInd = 2;
-	else if((flags>>5)&1) genMatchInd = 4;
+    if(flags&1) genMatchInd = 2;
+    else if((flags>>5)&1) genMatchInd = 4;
       }
       else if(apdg==66615)
-	genMatchInd = 5;
+    genMatchInd = 5;
     }
 
   }
@@ -916,10 +901,7 @@ int Ntuplizer::GenIndex(const pat::TauRef& tau, const edm::View<pat::GenericPart
 
 }
 
-
-
-
-float Ntuplizer::ComputeMT (math::XYZTLorentzVector visP4, const pat::MET& met)
+float NtuplizerRun3::ComputeMT (math::XYZTLorentzVector visP4, const pat::MET& met)
 {
   math::XYZTLorentzVector METP4 (met.pt()*TMath::Cos(met.phi()), met.pt()*TMath::Sin(met.phi()), 0, met.pt());
   float scalSum = met.pt() + visP4.pt();
@@ -930,10 +912,7 @@ float Ntuplizer::ComputeMT (math::XYZTLorentzVector visP4, const pat::MET& met)
   return sqrt (scalSum*scalSum - vecSumPt*vecSumPt);
 }
 
-
-
-
 #include <FWCore/Framework/interface/MakerMacros.h>
-DEFINE_FWK_MODULE(Ntuplizer);
+DEFINE_FWK_MODULE(NtuplizerRun3);
 
-#endif //NTUPLIZER_H
+#endif //NTUPLIZERRUN3_H

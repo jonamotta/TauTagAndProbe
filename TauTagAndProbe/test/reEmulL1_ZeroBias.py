@@ -5,9 +5,10 @@ from Configuration.StandardSequences.Eras import eras
 
 isMC = False
 
-#process = cms.Process("ZeroBias",eras.Run2_2016)
-#process = cms.Process("ZeroBias",eras.Run2_2017)
-process = cms.Process("ZeroBias",eras.Run2_2018)
+# process = cms.Process("ZeroBias",eras.Run2_2016)
+# process = cms.Process("ZeroBias",eras.Run2_2017)
+# process = cms.Process("ZeroBias",eras.Run2_2018)
+process = cms.Process("ZeroBias",eras.Run3)
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
@@ -66,7 +67,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '124X_dataRun3_v4'
+    process.GlobalTag.globaltag = '124X_dataRun3_v5'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -77,7 +78,7 @@ if not isMC: # will use 80X
 
 else: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '124X_dataRun3_v4'
+    process.GlobalTag.globaltag = '124X_dataRun3_v5'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -91,8 +92,14 @@ process.schedule = cms.Schedule()
 ## L1 emulation stuff
 
 if not isMC:
-    from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAW 
-    process = L1TReEmulFromRAW(process)
+    ## re-emulate starting from RAW information (here we do not re-emulate also the TPs)
+    # from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAW
+    # process = L1TReEmulFromRAW(process)
+
+    ## re-emulate starting from TPs (here we re-emulate also the TPs)
+    from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAWsimHcalTP
+    process = L1TReEmulFromRAWsimHcalTP(process)
+
 else:
     ## re-emulate starting from RAW information (here we do not re-emulate also the TPs)
     #from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAW
@@ -104,10 +111,19 @@ else:
 
     from L1Trigger.Configuration.customiseUtils import L1TTurnOffUnpackStage2GtGmtAndCalo 
     process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
-    #from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAWsimTP
-    #process = L1TReEmulFromRAWsimTP(process)
 
-process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_2_cfi")
+
+# 2018 full caloparams
+# process.load("L1Trigger.L1TCalorimeter.caloParams_2018_v1_4_cfi")
+
+# 2018 LUTs currently ONLINE
+#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi")
+
+# 2022 LUTs new and to be waited for online
+# process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_2_cfi")
+
+# 2022 full LUTs as online
+process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_4_cfi")
 
 ############################
 # PFA1' Filter

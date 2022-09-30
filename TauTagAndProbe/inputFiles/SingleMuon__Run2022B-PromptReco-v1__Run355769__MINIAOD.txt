@@ -1,0 +1,10 @@
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/82c1a654-e7b9-4bba-a459-d9add47cdd01.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/a29a48dd-7f7e-4487-8f13-a57d46f4b21d.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/ec1199ce-8376-41aa-bcbd-6aebfae287ed.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/f12e4351-4946-4d39-bacc-f2851d1d4435.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/51dfeb4d-6337-496b-8f15-c481d193a652.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/6803ae81-a5dc-4f11-9ec2-3562846cebe0.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/b4d40246-6920-4715-9003-adce03c713b4.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/fcb326cb-f198-4cb1-8924-2e33f49f63e5.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/16bf924d-9096-42b3-96f3-7f2fa60bf387.root
+/store/data/Run2022B/SingleMuon/MINIAOD/PromptReco-v1/000/355/769/00000/8584b4d2-622a-4fd0-852b-14fee0f3fcec.root

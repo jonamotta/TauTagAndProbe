@@ -238,11 +238,12 @@ bjets = cms.EDFilter("PATJetRefSelector",
         #filter = cms.bool(True)
 )
 
-TagAndProbe = cms.EDFilter("TauTagAndProbeFilter",
+TagAndProbe = cms.EDFilter("TauTagAndProbeFilterRun2",
                            taus  = cms.InputTag("goodTaus"),
                            muons = cms.InputTag("goodMuons"),
                            met   = cms.InputTag("slimmedMETs"),
-                           useMassCuts = cms.bool(False),
+                           useWMassCuts = cms.bool(True),
+                           useZMassCuts = cms.bool(True),
                            electrons = cms.InputTag("slimmedElectrons"),
                            eleLooseIdMap = cms.InputTag("egmGsfElectronIDs:mvaEleID-Spring16-HZZ-V1-wpLoose"),
                            bjets = cms.InputTag("bjets")
@@ -256,7 +257,7 @@ patTriggerUnpacker = cms.EDProducer("PATTriggerObjectStandAloneUnpacker",
                                     unpackFilterLabels = cms.bool(True)
                                     )
 
-Ntuplizer = cms.EDAnalyzer("Ntuplizer",
+Ntuplizer = cms.EDAnalyzer("NtuplizerRun2",
     treeName = cms.string("TagAndProbe"),
     isMC = cms.bool(False),
     genCollection = cms.InputTag(""),
@@ -275,7 +276,7 @@ Ntuplizer = cms.EDAnalyzer("Ntuplizer",
     Vertexes = cms.InputTag("offlineSlimmedPrimaryVertices"),
     L2CaloJet_ForIsoPix_Collection = cms.InputTag("hltL2TausForPixelIsolation", "", "TEST"),
     L2CaloJet_ForIsoPix_IsoCollection = cms.InputTag("hltL2TauPixelIsoTagProducer", "", "TEST"),
-    stageL1Trigger = cms.uint32(1)
+    stageL1Trigger = cms.uint32(2)
 )
 
 TAndPseq = cms.Sequence(

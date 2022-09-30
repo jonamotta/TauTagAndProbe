@@ -1,0 +1,12 @@
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/4f56f85a-890a-4dd0-b13d-e2388d771143.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/b2670f6f-ac47-4bf9-b7ba-12ad8f9ddcda.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/e40be32d-d3d2-4369-ad45-95518ef7acfb.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/7dbedaa4-9134-4a54-9938-22160d0d5705.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/76dc7b6f-02d9-4802-a27c-154c028744f4.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/d8de8057-a5eb-4a23-b377-5947988614a4.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/7245e12b-6042-42bc-9bf6-37921cf29007.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/5ec4003b-88fc-4585-ae7c-a688f1d0b4e6.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/99ca3fdb-5fab-414b-a9db-c4f468c52b64.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/68534bcf-5384-4e17-b161-0cde1c8fc68a.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/904a7587-9ac9-4a0c-8c36-66edbf0469ac.root
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/RAW/v1/000/355/414/00000/88f6819c-5e01-410c-b79c-601de3e9683d.root
