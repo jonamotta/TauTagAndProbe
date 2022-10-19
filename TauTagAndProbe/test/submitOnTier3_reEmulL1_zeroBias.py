@@ -109,6 +109,34 @@ if not isMC:
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022C_Fill8112-8113-8115_RAW_reEmuTPs")
     # list_njobs.append(50)
 
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022D-v1__Run357802__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022D_Run357802__RAW")
+    # list_njobs.append(8)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022Cpre-v1__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022Cpre__RAW")
+    # list_njobs.append(50)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022Cpost-v1__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022Cpost__RAW")
+    # list_njobs.append(50)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022D-v1__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022D__RAW")
+    # list_njobs.append(50)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022E-v1__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022E__RAW")
+    # list_njobs.append(100)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022F-v1__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022F__RAW")
+    # list_njobs.append(150)
+
+    list_filelists.append(open(filedir+"/test.txt"))
+    list_folders.append("/data_CMS/cms/motta/Run3preparation/test")
+    list_njobs.append(10)
+
 
     ## SingleMuon 13.6TeV
     # list_filelists.append(open(filedir+"/SingleMuon__Run2022B-v1__Run355769__RAW.txt"))
@@ -139,13 +167,13 @@ if not isMC:
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon_Run2022C_fromRun356709toRun357271_RAW_reEmuTPs")
     # list_njobs.append(350)
 
-    list_filelists.append(open(filedir+"/Muon__Run2022C-v1__RAW.txt"))
-    list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022C-v1__RAW__GoldenJSON")
-    list_njobs.append(350)
+    # list_filelists.append(open(filedir+"/Muon__Run2022C-v1__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022C-v1__RAW__GoldenJSON")
+    # list_njobs.append(350)
 
-    list_filelists.append(open(filedir+"/Muon__Run2022D-v1__RAW.txt"))
-    list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022D-v1__RAW__GoldenJSON")
-    list_njobs.append(350)
+    # list_filelists.append(open(filedir+"/Muon__Run2022D-v1__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022D-v1__RAW__GoldenJSON")
+    # list_njobs.append(350)
 
     # exit()
 
@@ -174,7 +202,7 @@ else:
 
 # JSONfile = "/home/llr/cms/davignon/json_DCSONLY.txt"
 # JSONfile = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt"
-JSONfile = "./Cert_Collisions2022_357079_357900_Golden.txt"
+# JSONfile = "./Cert_Collisions2022_357079_357900_Golden.txt"
 
 ###########
 
@@ -208,8 +236,8 @@ for i in range(len(list_folders)):
         jobfilelist.close()
 
         if not isMC:
-            # cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
-            cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
+            cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
+            # cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
         else:
             if not isNU: cmsRun = "cmsRun reEmulL1_MC_L1Only.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " isNU=0 >& " + outLogName
             else:        cmsRun = "cmsRun reEmulL1_MC_L1Only.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " isNU=1 >& " + outLogName
@@ -226,8 +254,8 @@ for i in range(len(list_folders)):
         skimjob.close ()
 
         os.system ('chmod u+rwx ' + outJobName)
-        command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
-        # command = ('/home/llr/cms/motta/t3submit -short \'' + outJobName +"\'")
+        # command = ('/home/llr/cms/motta/t3submit -long \'' + outJobName +"\'")
+        command = ('/home/llr/cms/motta/t3submit -short \'' + outJobName +"\'")
         print command
         os.system (command)
         # break

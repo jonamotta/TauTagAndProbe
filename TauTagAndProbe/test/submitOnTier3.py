@@ -140,20 +140,26 @@ list_njobs = []
 # list_folders.append("/data_CMS/cms/motta/Run3preparation/test")
 # list_njobs.append(2)
 
-list_filelists.append(open(filedir+"/Muon__Run2022C-PromptReco-v1__MINIAOD.txt"))
-list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022C-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
-list_njobs.append(200)
-Run2 = False; Run3 = True
+# list_filelists.append(open(filedir+"/Muon__Run2022C-PromptReco-v1__MINIAOD.txt"))
+# list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022C-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+# list_njobs.append(200)
+# Run2 = False; Run3 = True
 
-list_filelists.append(open(filedir+"/Muon__Run2022D-PromptReco-v1__MINIAOD.txt"))
-list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022D-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
-list_njobs.append(100)
-Run2 = False; Run3 = True
+# list_filelists.append(open(filedir+"/Muon__Run2022D-PromptReco-v1__MINIAOD.txt"))
+# list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022D-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+# list_njobs.append(100)
+# Run2 = False; Run3 = True
 
+list_filelists.append(open(filedir+"/Muon__Run2022E-PromptReco-v1__MINIAOD.txt"))
+list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022E-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+list_njobs.append(350)
+Run2 = False; Run3 = True
 
 
 # RUN3 GOLDEN JSON
-if Run3: JSONfile = "./Cert_Collisions2022_357079_357900_Golden.txt"
+if Run3:
+    # JSONfile = "./Cert_Collisions2022_357079_357900_Golden.txt"
+    JSONfile = "./Cert_Collisions2022_359569_359812_Golden.txt"
 
 # RUN2 GOLDEN JSON
 if Run2: JSONfile = "./Cert_Collisions2018_323414-325175_Golden.txt"

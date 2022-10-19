@@ -1,4 +1,1 @@
-/store/data/Run2022C/Muon/MINIAOD/PromptReco-v1/000/356/427/00000/18121987-99e3-43d1-a520-a7513177c4dd.root
-/store/data/Run2022C/Muon/MINIAOD/PromptReco-v1/000/357/479/00000/c454f3b3-0c53-4129-b5db-f22c6ea789e1.root
-/store/data/Run2022C/Muon/MINIAOD/PromptReco-v1/000/356/523/00000/5676bf11-f585-4cf8-bf55-bb35626ae70d.root
-/store/data/Run2022C/Muon/MINIAOD/PromptReco-v1/000/357/441/00000/278c7b62-4cdc-4596-bb10-87639ddede82.root
+/store/data/Run2022D/ZeroBias/RAW/v1/000/357/696/00000/96ee2801-b127-42f0-a2f8-1ea1594a6c73.root

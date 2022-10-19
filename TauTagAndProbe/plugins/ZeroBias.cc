@@ -931,14 +931,14 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   if(L1MuHandle.isValid()){
     for (l1t::MuonBxCollection::const_iterator bx0MuIt = L1MuHandle->begin(0); bx0MuIt != L1MuHandle->end(0) ; bx0MuIt++)
       {
-	const l1t::Muon& l1tMu = *bx0MuIt;
-	
-	//cout<<"FW Mu, pT = "<<l1tMu.pt()<<", eta = "<<l1tMu.eta()<<", phi = "<<l1tMu.phi()<<endl;
-	
-	this -> _l1tMuPt.push_back(l1tMu.pt());
-	this -> _l1tMuEta.push_back(l1tMu.eta());
-	this -> _l1tMuPhi.push_back(l1tMu.phi());
-	this -> _l1tMuQual.push_back(l1tMu.hwQual());
+      	const l1t::Muon& l1tMu = *bx0MuIt;
+      	
+      	//cout<<"FW Mu, pT = "<<l1tMu.pt()<<", eta = "<<l1tMu.eta()<<", phi = "<<l1tMu.phi()<<endl;
+      	
+      	this -> _l1tMuPt.push_back(l1tMu.pt());
+      	this -> _l1tMuEta.push_back(l1tMu.eta());
+      	this -> _l1tMuPhi.push_back(l1tMu.phi());
+      	this -> _l1tMuQual.push_back(l1tMu.hwQual());
 	
       }
   }
