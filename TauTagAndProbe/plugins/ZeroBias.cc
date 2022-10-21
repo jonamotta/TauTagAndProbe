@@ -41,6 +41,7 @@
 #include <boost/foreach.hpp>
 #include "DataFormats/TauReco/interface/PFJetChargedHadronAssociation.h"
 #include "DataFormats/TauReco/interface/JetPiZeroAssociation.h"
+#include "DataFormats/L1TGlobal/interface/GlobalAlgBlk.h"
 
 #include "tParameterSet.h"
 
@@ -88,6 +89,21 @@ private:
   Int_t           _runNumber;
   Int_t           _lumi;
   unsigned long _EventTriggerBits;
+
+  UInt_t _bit21;
+  UInt_t _bit178;
+  UInt_t _bit192;
+  UInt_t _bit218;
+  UInt_t _bit262;
+  UInt_t _bit263;
+  UInt_t _bit270;
+  UInt_t _bit271;
+
+  std::vector<float> _ugtTauPt;
+  std::vector<float> _ugtTauEta;
+  std::vector<float> _ugtTauPhi;
+  std::vector<int> _ugtTauIso;
+  std::vector<int> _ugtTauQual;
 
   std::vector<int> _l1tQual;
   std::vector<float> _l1tPt;
@@ -247,6 +263,9 @@ private:
   std::vector<float> _hltPFTau35TrackPt1Reg_Eta;
   std::vector<float> _hltPFTau35TrackPt1Reg_Phi;
 
+  edm::EDGetTokenT<GlobalAlgBlkBxCollection> _ugtTag;
+  edm::EDGetTokenT<l1t::TauBxCollection> _ugt_tauTag  ;
+
   edm::EDGetTokenT<l1t::TauBxCollection> _L1TauTag  ;
   edm::EDGetTokenT<l1t::TauBxCollection> _L1EmuTauTag  ;
   edm::EDGetTokenT<l1t::JetBxCollection> _l1tJetTag;
@@ -285,7 +304,6 @@ private:
   vector<string> _triggerlist;
   vector<int> _indexOfPath;
   vector<string> _foundPaths;
-
 };
 
 /*
@@ -298,6 +316,8 @@ private:
 
 // ----Constructor and Destructor -----
 ZeroBias::ZeroBias(const edm::ParameterSet& iConfig) :
+  _ugtTag(consumes<GlobalAlgBlkBxCollection>                   (iConfig.getParameter<edm::InputTag>("L1uGT"))),
+  _ugt_tauTag(consumes<l1t::TauBxCollection>                   (iConfig.getParameter<edm::InputTag>("L1uGTTau"))),
   _L1TauTag       (consumes<l1t::TauBxCollection>                   (iConfig.getParameter<edm::InputTag>("L1Tau"))),
   _L1EmuTauTag    (consumes<l1t::TauBxCollection>                   (iConfig.getParameter<edm::InputTag>("L1EmuTau"))),
   _l1tJetTag      (consumes<l1t::JetBxCollection>                     (iConfig.getParameter<edm::InputTag>("l1tJetCollection"))),
@@ -372,7 +392,7 @@ void ZeroBias::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
         bool found = false;
         for(unsigned int j=0; j < triggerNames.size(); j++)
         {
-	  std::cout << triggerNames[j] << std::endl;
+    std::cout << triggerNames[j] << std::endl;
             if (triggerNames[j].find(hltPath) != std::string::npos) {
                 found = true;
                 parameter.hltPathIndex = j;
@@ -391,16 +411,16 @@ void ZeroBias::beginRun(edm::Run const& iRun, edm::EventSetup const& iSetup)
     //for(size_t i=0; i<triggerPaths.size(); i++){
     // bool foundThisPath = false;
       for(size_t j=0; j<_hltConfig.triggerNames().size(); j++){
-	string pathName = _hltConfig.triggerNames()[j];
-	//TString tempo= hltConfig_.triggerNames()[j];
-	//printf("%s\n",tempo.Data());
-	//if(pathName==triggerPaths[i]){
-	//foundThisPath = true;
-	_indexOfPath.push_back(j);
-	_foundPaths.push_back(pathName);
-	
-	cout << j << " - TTT: " << pathName << endl;
-	//	  edm::LogInfo("AnalyzeRates")<<"Added path "<<pathName<<" to foundPaths";
+  string pathName = _hltConfig.triggerNames()[j];
+  //TString tempo= hltConfig_.triggerNames()[j];
+  //printf("%s\n",tempo.Data());
+  //if(pathName==triggerPaths[i]){
+  //foundThisPath = true;
+  _indexOfPath.push_back(j);
+  _foundPaths.push_back(pathName);
+  
+  cout << j << " - TTT: " << pathName << endl;
+  //    edm::LogInfo("AnalyzeRates")<<"Added path "<<pathName<<" to foundPaths";
       } 
     }
 
@@ -411,6 +431,21 @@ void ZeroBias::Initialize() {
   this -> _indexevents = 0;
   this -> _runNumber = 0;
   this -> _lumi = 0;
+
+  this -> _bit21 = 0;
+  this -> _bit178 = 0;
+  this -> _bit192 = 0;
+  this -> _bit218 = 0;
+  this -> _bit262 = 0;
+  this -> _bit263 = 0;
+  this -> _bit270 = 0;
+  this -> _bit271 = 0;
+
+  this -> _ugtTauPt.clear();
+  this -> _ugtTauEta.clear();
+  this -> _ugtTauPhi.clear();
+  this -> _ugtTauIso.clear();
+  this -> _ugtTauQual.clear();
 
   this -> _l1tPt .clear();
   this -> _l1tEta .clear();
@@ -583,6 +618,21 @@ void ZeroBias::beginJob()
   this -> _tree -> Branch("RunNumber",  &_runNumber);
   this -> _tree -> Branch("lumi",  &_lumi);
   this -> _tree -> Branch("EventTriggerBits", &_EventTriggerBits, "EventTriggerBits/L");
+
+  this -> _tree -> Branch("bit21", &_bit21);
+  this -> _tree -> Branch("bit178", &_bit178);
+  this -> _tree -> Branch("bit192", &_bit192);
+  this -> _tree -> Branch("bit218", &_bit218);
+  this -> _tree -> Branch("bit262", &_bit262);
+  this -> _tree -> Branch("bit263", &_bit263);
+  this -> _tree -> Branch("bit270", &_bit270);
+  this -> _tree -> Branch("bit271", &_bit271);
+
+  this -> _tree -> Branch("ugtTauPt",  &_ugtTauPt);
+  this -> _tree -> Branch("ugtTauEta",  &_ugtTauEta);
+  this -> _tree -> Branch("ugtTauPhi",  &_ugtTauPhi);
+  this -> _tree -> Branch("ugtTauIso",  &_ugtTauIso);
+  this -> _tree -> Branch("ugtTauQual",  &_ugtTauQual);
 
   this -> _tree -> Branch("l1tPt",  &_l1tPt);
   this -> _tree -> Branch("l1tEta", &_l1tEta);
@@ -765,50 +815,92 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   _runNumber = iEvent.id().run();
   _lumi = iEvent.luminosityBlock();
 
-  edm::Handle< BXVector<l1t::Tau> >  L1TauHandle;
+
+  edm::Handle<GlobalAlgBlkBxCollection> ugtHandle;
+  try {iEvent.getByToken(_ugtTag, ugtHandle);}  catch (...) {;}
+  if(ugtHandle.isValid())
+    {
+      for (BXVector<GlobalAlgBlk>::const_iterator bx0ugtIt = ugtHandle->begin(0); bx0ugtIt != ugtHandle->end(0) ; bx0ugtIt++)
+        {
+          const GlobalAlgBlk& ugt =  *bx0ugtIt;
+
+          // ugt.print(std::cout);
+
+          this -> _bit21 = ugt.getAlgoDecisionFinal(21);
+          this -> _bit178 = ugt.getAlgoDecisionFinal(178);
+          this -> _bit192 = ugt.getAlgoDecisionFinal(192);
+          this -> _bit218 = ugt.getAlgoDecisionFinal(218);
+          this -> _bit262 = ugt.getAlgoDecisionFinal(262);
+          this -> _bit263 = ugt.getAlgoDecisionFinal(263);
+          this -> _bit270 = ugt.getAlgoDecisionFinal(270);
+          this -> _bit271 = ugt.getAlgoDecisionFinal(271);
+        }
+    }
+
+
+  edm::Handle<l1t::TauBxCollection> L1uGTTauHandle;
+  try {iEvent.getByToken(_ugt_tauTag, L1uGTTauHandle);}  catch (...) {;}
+
+  if(L1uGTTauHandle.isValid())
+    {
+      for (l1t::TauBxCollection::const_iterator bx0TauIt = L1uGTTauHandle->begin(0); bx0TauIt != L1uGTTauHandle->end(0) ; bx0TauIt++)
+        {
+          const l1t::Tau& l1tTau = *bx0TauIt;
+          
+          //cout<<"FW Tau, pT = "<<l1tTau.pt()<<", eta = "<<l1tTau.eta()<<", phi = "<<l1tTau.phi()<<endl;
+          
+          this -> _ugtTauPt.push_back(l1tTau.pt());
+          this -> _ugtTauEta.push_back(l1tTau.eta());
+          this -> _ugtTauPhi.push_back(l1tTau.phi());
+          this -> _ugtTauIso.push_back(l1tTau.hwIso());
+          this -> _ugtTauQual.push_back(l1tTau.hwQual());
+        }
+    }
+
+  
+  edm::Handle<l1t::TauBxCollection> L1TauHandle;
   try {iEvent.getByToken(_L1TauTag, L1TauHandle);}  catch (...) {;}
 
-  if(L1TauHandle.isValid()){
-    for (l1t::TauBxCollection::const_iterator bx0TauIt = L1TauHandle->begin(0); bx0TauIt != L1TauHandle->end(0) ; bx0TauIt++)
-      {
-	const l1t::Tau& l1tTau = *bx0TauIt;
-	
-	//cout<<"FW Tau, pT = "<<l1tTau.pt()<<", eta = "<<l1tTau.eta()<<", phi = "<<l1tTau.phi()<<endl;
-	
-	this -> _l1tPt.push_back(l1tTau.pt());
-	this -> _l1tEta.push_back(l1tTau.eta());
-	this -> _l1tPhi.push_back(l1tTau.phi());
-	this -> _l1tIso.push_back(l1tTau.hwIso());
-	this -> _l1tQual.push_back(l1tTau.hwQual());
-	
-      }
-  }
+  if(L1TauHandle.isValid())
+    {
+      for (l1t::TauBxCollection::const_iterator bx0TauIt = L1TauHandle->begin(0); bx0TauIt != L1TauHandle->end(0) ; bx0TauIt++)
+        {
+          const l1t::Tau& l1tTau = *bx0TauIt;
+          
+          //cout<<"FW Tau, pT = "<<l1tTau.pt()<<", eta = "<<l1tTau.eta()<<", phi = "<<l1tTau.phi()<<endl;
+          
+          this -> _l1tPt.push_back(l1tTau.pt());
+          this -> _l1tEta.push_back(l1tTau.eta());
+          this -> _l1tPhi.push_back(l1tTau.phi());
+          this -> _l1tIso.push_back(l1tTau.hwIso());
+          this -> _l1tQual.push_back(l1tTau.hwQual());
+        }
+    }
 
   edm::Handle< BXVector<l1t::Tau> >  L1EmuTauHandle;
   try {iEvent.getByToken(_L1EmuTauTag, L1EmuTauHandle);} catch (...) {;}
 
   if (L1EmuTauHandle.isValid())
-    {	
+    { 
       for (l1t::TauBxCollection::const_iterator bx0EmuTauIt = L1EmuTauHandle->begin(0); bx0EmuTauIt != L1EmuTauHandle->end(0) ; bx0EmuTauIt++)
-	{
-	  const l1t::Tau& l1tEmuTau = *bx0EmuTauIt;
-	    
-	  //cout<<"Emul Tau, pT = "<<l1tEmuTau.pt()<<", eta = "<<l1tEmuTau.eta()<<", phi = "<<l1tEmuTau.phi()<<endl;
-	    
-	  this -> _l1tEmuPt       .push_back(l1tEmuTau.pt());
-	  this -> _l1tEmuEta      .push_back(l1tEmuTau.eta());
-	  this -> _l1tEmuPhi      .push_back(l1tEmuTau.phi());
-	  this -> _l1tEmuIso      .push_back(l1tEmuTau.hwIso());
-	  this -> _l1tEmuNTT      .push_back(l1tEmuTau.nTT());
-	  this -> _l1tEmuQual     .push_back(l1tEmuTau.hwQual());
-	  this -> _l1tEmuHasEM    .push_back(l1tEmuTau.hasEM());
-	  this -> _l1tEmuIsMerged .push_back(l1tEmuTau.isMerged());
-	  this -> _l1tEmuTowerIEta.push_back(l1tEmuTau.towerIEta());
-	  this -> _l1tEmuTowerIPhi.push_back(l1tEmuTau.towerIPhi());
-	  this -> _l1tEmuRawEt    .push_back(l1tEmuTau.rawEt());
-	  this -> _l1tEmuIsoEt    .push_back(l1tEmuTau.isoEt());
-
-	}
+        {
+          const l1t::Tau& l1tEmuTau = *bx0EmuTauIt;
+            
+          //cout<<"Emul Tau, pT = "<<l1tEmuTau.pt()<<", eta = "<<l1tEmuTau.eta()<<", phi = "<<l1tEmuTau.phi()<<endl;
+            
+          this -> _l1tEmuPt       .push_back(l1tEmuTau.pt());
+          this -> _l1tEmuEta      .push_back(l1tEmuTau.eta());
+          this -> _l1tEmuPhi      .push_back(l1tEmuTau.phi());
+          this -> _l1tEmuIso      .push_back(l1tEmuTau.hwIso());
+          this -> _l1tEmuNTT      .push_back(l1tEmuTau.nTT());
+          this -> _l1tEmuQual     .push_back(l1tEmuTau.hwQual());
+          this -> _l1tEmuHasEM    .push_back(l1tEmuTau.hasEM());
+          this -> _l1tEmuIsMerged .push_back(l1tEmuTau.isMerged());
+          this -> _l1tEmuTowerIEta.push_back(l1tEmuTau.towerIEta());
+          this -> _l1tEmuTowerIPhi.push_back(l1tEmuTau.towerIPhi());
+          this -> _l1tEmuRawEt    .push_back(l1tEmuTau.rawEt());
+          this -> _l1tEmuIsoEt    .push_back(l1tEmuTau.isoEt());
+        }
     }
 
   edm::Handle<BXVector<l1t::Jet>> l1tJetHandle;
@@ -817,15 +909,14 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   if(l1tJetHandle.isValid()){
     for(BXVector<l1t::Jet>::const_iterator jet = l1tJetHandle -> begin(0); jet != l1tJetHandle -> end(0) ; jet++)
       {
-	
-	this -> _l1tPtJet        . push_back(jet -> pt());
-	this -> _l1tEtaJet       . push_back(jet -> eta());
-	this -> _l1tPhiJet       . push_back(jet -> phi());
-	this -> _l1tIsoJet       . push_back(jet -> hwIso());
-	this -> _l1tQualJet      . push_back(jet -> hwQual());
-	this -> _l1tTowerIEtaJet . push_back(jet -> towerIEta());
-	this -> _l1tTowerIPhiJet . push_back(jet -> towerIPhi());
-	this -> _l1tRawEtJet     . push_back(jet -> rawEt());
+        this -> _l1tPtJet        . push_back(jet -> pt());
+        this -> _l1tEtaJet       . push_back(jet -> eta());
+        this -> _l1tPhiJet       . push_back(jet -> phi());
+        this -> _l1tIsoJet       . push_back(jet -> hwIso());
+        this -> _l1tQualJet      . push_back(jet -> hwQual());
+        this -> _l1tTowerIEtaJet . push_back(jet -> towerIEta());
+        this -> _l1tTowerIPhiJet . push_back(jet -> towerIPhi());
+        this -> _l1tRawEtJet     . push_back(jet -> rawEt());
       }
   }
 
@@ -836,15 +927,14 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 
     for(BXVector<l1t::Jet>::const_iterator jet = l1tEmuJetHandle -> begin(0); jet != l1tEmuJetHandle -> end(0) ; jet++)
       {
-	
-	this -> _l1tEmuPtJet        . push_back(jet -> pt());
-	this -> _l1tEmuEtaJet       . push_back(jet -> eta());
-	this -> _l1tEmuPhiJet       . push_back(jet -> phi());
-	this -> _l1tEmuIsoJet       . push_back(jet -> hwIso());
-	this -> _l1tEmuQualJet      . push_back(jet -> hwQual());
-	this -> _l1tEmuTowerIEtaJet . push_back(jet -> towerIEta());
-	this -> _l1tEmuTowerIPhiJet . push_back(jet -> towerIPhi());
-	this -> _l1tEmuRawEtJet     . push_back(jet -> rawEt());
+        this -> _l1tEmuPtJet        . push_back(jet -> pt());
+        this -> _l1tEmuEtaJet       . push_back(jet -> eta());
+        this -> _l1tEmuPhiJet       . push_back(jet -> phi());
+        this -> _l1tEmuIsoJet       . push_back(jet -> hwIso());
+        this -> _l1tEmuQualJet      . push_back(jet -> hwQual());
+        this -> _l1tEmuTowerIEtaJet . push_back(jet -> towerIEta());
+        this -> _l1tEmuTowerIPhiJet . push_back(jet -> towerIPhi());
+        this -> _l1tEmuRawEtJet     . push_back(jet -> rawEt());
       }
     
   }
@@ -855,12 +945,11 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   if(l1tSumHandle.isValid()){
     for(BXVector<l1t::EtSum>::const_iterator sum = l1tSumHandle -> begin(0); sum != l1tSumHandle -> end(0) ; sum++)
       {
-	
-	this -> _l1tSumType.push_back(sum -> getType());
-	this -> _l1tSumEt  .  push_back(sum -> et());
-	this -> _l1tSumPhi . push_back(sum -> phi());
-	this -> _l1tSumIEt . push_back(sum -> hwPt());
-	this -> _l1tSumIPhi. push_back(sum -> hwPhi());
+        this -> _l1tSumType.push_back(sum -> getType());
+        this -> _l1tSumEt  .  push_back(sum -> et());
+        this -> _l1tSumPhi . push_back(sum -> phi());
+        this -> _l1tSumIEt . push_back(sum -> hwPt());
+        this -> _l1tSumIPhi. push_back(sum -> hwPhi());
       }
   }
 
@@ -870,12 +959,11 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   if(l1tEmuSumHandle.isValid()){
     for(BXVector<l1t::EtSum>::const_iterator sum = l1tEmuSumHandle -> begin(0); sum != l1tEmuSumHandle -> end(0) ; sum++)
       {
-	
-	this -> _l1tEmuSumType.push_back(sum -> getType());
-	this -> _l1tEmuSumEt  .  push_back(sum -> et());
-	this -> _l1tEmuSumPhi . push_back(sum -> phi());
-	this -> _l1tEmuSumIEt . push_back(sum -> hwPt());
-	this -> _l1tEmuSumIPhi. push_back(sum -> hwPhi());
+        this -> _l1tEmuSumType.push_back(sum -> getType());
+        this -> _l1tEmuSumEt  .  push_back(sum -> et());
+        this -> _l1tEmuSumPhi . push_back(sum -> phi());
+        this -> _l1tEmuSumIEt . push_back(sum -> hwPt());
+        this -> _l1tEmuSumIPhi. push_back(sum -> hwPhi());
       }
   }
 
@@ -885,16 +973,15 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   if(L1EGHandle.isValid()){
     for (l1t::EGammaBxCollection::const_iterator bx0EGIt = L1EGHandle->begin(0); bx0EGIt != L1EGHandle->end(0) ; bx0EGIt++)
       {
-	const l1t::EGamma& l1tEG = *bx0EGIt;
-	
-	//cout<<"FW EG, pT = "<<l1tEG.pt()<<", eta = "<<l1tEG.eta()<<", phi = "<<l1tEG.phi()<<endl;
-	
-	this -> _l1tEGPt.push_back(l1tEG.pt());
-	this -> _l1tEGEta.push_back(l1tEG.eta());
-	this -> _l1tEGPhi.push_back(l1tEG.phi());
-	this -> _l1tEGIso.push_back(l1tEG.hwIso());
-	this -> _l1tEGQual.push_back(l1tEG.hwQual());
-	
+        const l1t::EGamma& l1tEG = *bx0EGIt;
+        
+        //cout<<"FW EG, pT = "<<l1tEG.pt()<<", eta = "<<l1tEG.eta()<<", phi = "<<l1tEG.phi()<<endl;
+  
+        this -> _l1tEGPt.push_back(l1tEG.pt());
+        this -> _l1tEGEta.push_back(l1tEG.eta());
+        this -> _l1tEGPhi.push_back(l1tEG.phi());
+        this -> _l1tEGIso.push_back(l1tEG.hwIso());
+        this -> _l1tEGQual.push_back(l1tEG.hwQual());
       }
   }
 
@@ -902,25 +989,24 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   try {iEvent.getByToken(_L1EmuEGTag, L1EmuEGHandle);} catch (...) {;}
 
   if (L1EmuEGHandle.isValid())
-    {	
+    { 
       for (l1t::EGammaBxCollection::const_iterator bx0EmuEGIt = L1EmuEGHandle->begin(0); bx0EmuEGIt != L1EmuEGHandle->end(0) ; bx0EmuEGIt++)
-	{
-	  const l1t::EGamma& l1tEmuEG = *bx0EmuEGIt;
-	    
-	  //cout<<"Emul EG, pT = "<<l1tEmuEG.pt()<<", eta = "<<l1tEmuEG.eta()<<", phi = "<<l1tEmuEG.phi()<<endl;
-	    
-	  this -> _l1tEmuEGPt       .push_back(l1tEmuEG.pt());
-	  this -> _l1tEmuEGEta      .push_back(l1tEmuEG.eta());
-	  this -> _l1tEmuEGPhi      .push_back(l1tEmuEG.phi());
-	  this -> _l1tEmuEGIso      .push_back(l1tEmuEG.hwIso());
-	  this -> _l1tEmuEGNTT      .push_back(l1tEmuEG.nTT());
-	  this -> _l1tEmuEGQual     .push_back(l1tEmuEG.hwQual());
-	  this -> _l1tEmuEGTowerIEta.push_back(l1tEmuEG.towerIEta());
-	  this -> _l1tEmuEGTowerIPhi.push_back(l1tEmuEG.towerIPhi());
-	  this -> _l1tEmuEGRawEt    .push_back(l1tEmuEG.rawEt());
-	  this -> _l1tEmuEGIsoEt    .push_back(l1tEmuEG.isoEt());
-
-	}
+        {
+          const l1t::EGamma& l1tEmuEG = *bx0EmuEGIt;
+            
+          //cout<<"Emul EG, pT = "<<l1tEmuEG.pt()<<", eta = "<<l1tEmuEG.eta()<<", phi = "<<l1tEmuEG.phi()<<endl;
+            
+          this -> _l1tEmuEGPt       .push_back(l1tEmuEG.pt());
+          this -> _l1tEmuEGEta      .push_back(l1tEmuEG.eta());
+          this -> _l1tEmuEGPhi      .push_back(l1tEmuEG.phi());
+          this -> _l1tEmuEGIso      .push_back(l1tEmuEG.hwIso());
+          this -> _l1tEmuEGNTT      .push_back(l1tEmuEG.nTT());
+          this -> _l1tEmuEGQual     .push_back(l1tEmuEG.hwQual());
+          this -> _l1tEmuEGTowerIEta.push_back(l1tEmuEG.towerIEta());
+          this -> _l1tEmuEGTowerIPhi.push_back(l1tEmuEG.towerIPhi());
+          this -> _l1tEmuEGRawEt    .push_back(l1tEmuEG.rawEt());
+          this -> _l1tEmuEGIsoEt    .push_back(l1tEmuEG.isoEt());
+        }
     }
 
 
@@ -931,15 +1017,14 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   if(L1MuHandle.isValid()){
     for (l1t::MuonBxCollection::const_iterator bx0MuIt = L1MuHandle->begin(0); bx0MuIt != L1MuHandle->end(0) ; bx0MuIt++)
       {
-      	const l1t::Muon& l1tMu = *bx0MuIt;
-      	
-      	//cout<<"FW Mu, pT = "<<l1tMu.pt()<<", eta = "<<l1tMu.eta()<<", phi = "<<l1tMu.phi()<<endl;
-      	
-      	this -> _l1tMuPt.push_back(l1tMu.pt());
-      	this -> _l1tMuEta.push_back(l1tMu.eta());
-      	this -> _l1tMuPhi.push_back(l1tMu.phi());
-      	this -> _l1tMuQual.push_back(l1tMu.hwQual());
-	
+        const l1t::Muon& l1tMu = *bx0MuIt;
+        
+        //cout<<"FW Mu, pT = "<<l1tMu.pt()<<", eta = "<<l1tMu.eta()<<", phi = "<<l1tMu.phi()<<endl;
+        
+        this -> _l1tMuPt.push_back(l1tMu.pt());
+        this -> _l1tMuEta.push_back(l1tMu.eta());
+        this -> _l1tMuPhi.push_back(l1tMu.phi());
+        this -> _l1tMuQual.push_back(l1tMu.hwQual());  
       }
   }
 
@@ -947,19 +1032,18 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   try {iEvent.getByToken(_L1EmuMuTag, L1EmuMuHandle);} catch (...) {;}
 
   if (L1EmuMuHandle.isValid())
-    {	
+    { 
       for (l1t::MuonBxCollection::const_iterator bx0EmuMuIt = L1EmuMuHandle->begin(0); bx0EmuMuIt != L1EmuMuHandle->end(0) ; bx0EmuMuIt++)
-	{
-	  const l1t::Muon& l1tEmuMu = *bx0EmuMuIt;
-	    
-	  //cout<<"Emul Mu, pT = "<<l1tEmuMu.pt()<<", eta = "<<l1tEmuMu.eta()<<", phi = "<<l1tEmuMu.phi()<<endl;
-	    
-	  this -> _l1tEmuMuPt       .push_back(l1tEmuMu.pt());
-	  this -> _l1tEmuMuEta      .push_back(l1tEmuMu.eta());
-	  this -> _l1tEmuMuPhi      .push_back(l1tEmuMu.phi());
-	  this -> _l1tEmuMuQual     .push_back(l1tEmuMu.hwQual());
-
-	}
+        {
+          const l1t::Muon& l1tEmuMu = *bx0EmuMuIt;
+            
+          //cout<<"Emul Mu, pT = "<<l1tEmuMu.pt()<<", eta = "<<l1tEmuMu.eta()<<", phi = "<<l1tEmuMu.phi()<<endl;
+            
+          this -> _l1tEmuMuPt       .push_back(l1tEmuMu.pt());
+          this -> _l1tEmuMuEta      .push_back(l1tEmuMu.eta());
+          this -> _l1tEmuMuPhi      .push_back(l1tEmuMu.phi());
+          this -> _l1tEmuMuQual     .push_back(l1tEmuMu.hwQual());
+        }
     }
 
 
@@ -979,93 +1063,88 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   
     for (pat::TriggerObjectStandAlone  obj : *triggerObjects)
       {
-	
-	obj.unpackPathNames(names);
-	const edm::TriggerNames::Strings& triggerNames = names.triggerNames();
-	
-	bool hasTriggerTauType = obj.hasTriggerObjectType(trigger::TriggerTau);
-	bool hasTriggerMuType = obj.hasTriggerObjectType(trigger::TriggerMuon);
-	bool hasTriggerEleType = obj.hasTriggerObjectType(trigger::TriggerElectron);
+  
+        obj.unpackPathNames(names);
+        const edm::TriggerNames::Strings& triggerNames = names.triggerNames();
+        
+        bool hasTriggerTauType = obj.hasTriggerObjectType(trigger::TriggerTau);
+        bool hasTriggerMuType = obj.hasTriggerObjectType(trigger::TriggerMuon);
+        bool hasTriggerEleType = obj.hasTriggerObjectType(trigger::TriggerElectron);
 
-	//Looking for the path
-	unsigned int x = 0;
-	for (const tParameterSet& parameter : this -> _parameters)
-	  {
-	    
-	    
-	    if ((parameter.hltPathIndex >= 0)&&(obj.hasPathName(triggerNames[parameter.hltPathIndex], true, false)))
-	      {
-		
-		//cout<<"FOUND EVENT with HLT PATH "<<triggerNames[parameter.hltPathIndex]<<endl;
-		
-		this -> _EventTriggerBitSet[x] = true;
-		
-		if(hasTriggerTauType)
-		  {
-		    //std::cout << "#### FOUND TAU WITH HLT PATH " << x << " ####" << std::endl;
-		    this -> _hltTauPt.push_back(obj.pt());
-		    this -> _hltTauEta.push_back(obj.eta());
-		    this -> _hltTauPhi.push_back(obj.phi());
-		    this -> _hltTauTriggerBits.push_back( x );
-		  }
-		
-		if(hasTriggerMuType)
-		  {
-		    //std::cout << "#### FOUND MUON WITH HLT PATH " << x << " ####" << std::endl;
-		    this -> _hltMuPt.push_back(obj.pt());
-		    this -> _hltMuEta.push_back(obj.eta());
-		    this -> _hltMuPhi.push_back(obj.phi());
-		    this -> _hltMuTriggerBits.push_back( x );
-		  }
-		
-		if(hasTriggerEleType)
-		  {
-		    //std::cout << "#### FOUND ELE WITH HLT PATH " << x << " ####" << std::endl;
-		    this -> _hltElePt.push_back(obj.pt());
-		    this -> _hltEleEta.push_back(obj.eta());
-		    this -> _hltElePhi.push_back(obj.phi());
-		    this -> _hltEleTriggerBits.push_back( x );
-		  }
-		
-	      }
-	    
-	    x++;
-	  }
-	
-	const std::vector<std::string>& L2CaloJetIsoPix_filters = {"hltL2TauIsoFilter"};
-	if (this -> hasFilters(obj, L2CaloJetIsoPix_filters)){
-	  this -> _hltL2CaloJetIsoPix_N++;	  
-	  this -> _hltL2CaloJetIsoPix_Pt.push_back(obj.pt());
-	  this -> _hltL2CaloJetIsoPix_Eta.push_back(obj.eta());
-	  this -> _hltL2CaloJetIsoPix_Phi.push_back(obj.phi());	  
-	}
+        //Looking for the path
+        unsigned int x = 0;
+        for (const tParameterSet& parameter : this -> _parameters)
+          {
+            if ((parameter.hltPathIndex >= 0)&&(obj.hasPathName(triggerNames[parameter.hltPathIndex], true, false)))
+              {
+                //cout<<"FOUND EVENT with HLT PATH "<<triggerNames[parameter.hltPathIndex]<<endl;
+                
+                this -> _EventTriggerBitSet[x] = true;
+                
+                if(hasTriggerTauType)
+                  {
+                    //std::cout << "#### FOUND TAU WITH HLT PATH " << x << " ####" << std::endl;
+                    this -> _hltTauPt.push_back(obj.pt());
+                    this -> _hltTauEta.push_back(obj.eta());
+                    this -> _hltTauPhi.push_back(obj.phi());
+                    this -> _hltTauTriggerBits.push_back( x );
+                  }
+                
+                if(hasTriggerMuType)
+                  {
+                    //std::cout << "#### FOUND MUON WITH HLT PATH " << x << " ####" << std::endl;
+                    this -> _hltMuPt.push_back(obj.pt());
+                    this -> _hltMuEta.push_back(obj.eta());
+                    this -> _hltMuPhi.push_back(obj.phi());
+                    this -> _hltMuTriggerBits.push_back( x );
+                  }
+                
+                if(hasTriggerEleType)
+                  {
+                    //std::cout << "#### FOUND ELE WITH HLT PATH " << x << " ####" << std::endl;
+                    this -> _hltElePt.push_back(obj.pt());
+                    this -> _hltEleEta.push_back(obj.eta());
+                    this -> _hltElePhi.push_back(obj.phi());
+                    this -> _hltEleTriggerBits.push_back( x );
+                  }
+              }
+            
+            x++;
+          }
+        
+        const std::vector<std::string>& L2CaloJetIsoPix_filters = {"hltL2TauIsoFilter"};
+        if (this -> hasFilters(obj, L2CaloJetIsoPix_filters)){
+          this -> _hltL2CaloJetIsoPix_N++;    
+          this -> _hltL2CaloJetIsoPix_Pt.push_back(obj.pt());
+          this -> _hltL2CaloJetIsoPix_Eta.push_back(obj.eta());
+          this -> _hltL2CaloJetIsoPix_Phi.push_back(obj.phi());   
+        }
 
-	const std::vector<std::string>& PFTauTrack_filters = {"hltPFTauTrack"};
-	if (this -> hasFilters(obj, PFTauTrack_filters)){
-	  this -> _hltPFTauTrack_N++;	  
-	  this -> _hltPFTauTrack_Pt.push_back(obj.pt());
-	  this -> _hltPFTauTrack_Eta.push_back(obj.eta());
-	  this -> _hltPFTauTrack_Phi.push_back(obj.phi());
-	}
+        const std::vector<std::string>& PFTauTrack_filters = {"hltPFTauTrack"};
+        if (this -> hasFilters(obj, PFTauTrack_filters)){
+          this -> _hltPFTauTrack_N++;   
+          this -> _hltPFTauTrack_Pt.push_back(obj.pt());
+          this -> _hltPFTauTrack_Eta.push_back(obj.eta());
+          this -> _hltPFTauTrack_Phi.push_back(obj.phi());
+        }
 
-	const std::vector<std::string>& PFTauTrackReg_filters = {"hltPFTauTrackReg"};
-	if (this -> hasFilters(obj, PFTauTrackReg_filters)){
-	  this -> _hltPFTauTrackReg_N++;	  
-	  this -> _hltPFTauTrackReg_Pt.push_back(obj.pt());
-	  this -> _hltPFTauTrackReg_Eta.push_back(obj.eta());
-	  this -> _hltPFTauTrackReg_Phi.push_back(obj.phi());
-	}
+        const std::vector<std::string>& PFTauTrackReg_filters = {"hltPFTauTrackReg"};
+        if (this -> hasFilters(obj, PFTauTrackReg_filters)){
+          this -> _hltPFTauTrackReg_N++;    
+          this -> _hltPFTauTrackReg_Pt.push_back(obj.pt());
+          this -> _hltPFTauTrackReg_Eta.push_back(obj.eta());
+          this -> _hltPFTauTrackReg_Phi.push_back(obj.phi());
+        }
 
-	const std::vector<std::string>& PFTau35TrackPt1Reg_filters = {"hltDoublePFTau35TrackPt1Reg"};
-	if (this -> hasFilters(obj, PFTau35TrackPt1Reg_filters)){
-	  this -> _hltPFTau35TrackPt1Reg_N++;	  
-	  this -> _hltPFTau35TrackPt1Reg_Pt.push_back(obj.pt());
-	  this -> _hltPFTau35TrackPt1Reg_Eta.push_back(obj.eta());
-	  this -> _hltPFTau35TrackPt1Reg_Phi.push_back(obj.phi());
-	}
+        const std::vector<std::string>& PFTau35TrackPt1Reg_filters = {"hltDoublePFTau35TrackPt1Reg"};
+        if (this -> hasFilters(obj, PFTau35TrackPt1Reg_filters)){
+          this -> _hltPFTau35TrackPt1Reg_N++;   
+          this -> _hltPFTau35TrackPt1Reg_Pt.push_back(obj.pt());
+          this -> _hltPFTau35TrackPt1Reg_Eta.push_back(obj.eta());
+          this -> _hltPFTau35TrackPt1Reg_Phi.push_back(obj.phi());
+        }
 
       }
-
   }
 
 
@@ -1079,7 +1158,8 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
 
   if(L2CaloJets_ForIsoPix_Handle.isValid() && L2CaloJets_ForIsoPix_IsoHandle.isValid()){
 
-    for (auto const &  jet : *L2CaloJets_ForIsoPix_IsoHandle){
+    for (auto const &  jet : *L2CaloJets_ForIsoPix_IsoHandle)
+    {
       edm::Ref<reco::CaloJetCollection> jetRef = edm::Ref<reco::CaloJetCollection>(L2CaloJets_ForIsoPix_Handle,jet.first.key());
       _hltL2CaloJet_N++;
       _hltL2CaloJet_Pt.push_back(jet.first->pt());
@@ -1095,8 +1175,8 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   edm::Handle< reco::TrackCollection > PixelTracks_Handle;
   try {iEvent.getByToken(_hltPixelTracksRegForTau_Tag, PixelTracks_Handle);}  catch (...) {;}
 
-  if(PixelTracks_Handle.isValid()){
-
+  if(PixelTracks_Handle.isValid())
+  {
     const reco::TrackCollection tracks = *(PixelTracks_Handle.product());
     for(unsigned int i=0; i<tracks.size(); i++) {
       _hltPixelTrack_N++;
@@ -1109,9 +1189,11 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   edm::Handle< reco::TrackCollection > MergedTracksTauReg_Handle;
   try {iEvent.getByToken(_hltMergedTracksTauReg_Tag, MergedTracksTauReg_Handle);}  catch (...) {;}
 
-  if(MergedTracksTauReg_Handle.isValid()){
+  if(MergedTracksTauReg_Handle.isValid())
+  {
     const reco::TrackCollection tracks = *(MergedTracksTauReg_Handle.product());
-    for(unsigned int i=0; i<tracks.size(); i++) {
+    for(unsigned int i=0; i<tracks.size(); i++)
+    {
       _hltMergedTrackTauReg_N++;
       _hltMergedTrackTauReg_Pt.push_back(tracks[i].pt());
       _hltMergedTrackTauReg_Eta.push_back(tracks[i].eta());
@@ -1122,11 +1204,11 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   edm::Handle< reco::PFCandidateCollection > PFRegCand_Handle;
   try {iEvent.getByToken(_hltPFRegCand_Tag, PFRegCand_Handle);}  catch (...) {;}
 
-  if(PFRegCand_Handle.isValid()){
-    
+  if(PFRegCand_Handle.isValid())
+  {  
     const reco::PFCandidateCollection PFRegCands = *(PFRegCand_Handle.product());
-    for(size_t i=0; i<PFRegCands.size(); i++){
-      
+    for(size_t i=0; i<PFRegCands.size(); i++)
+    {  
       auto PFRegCand = PFRegCands[i];
 
       _hltPFRegCand_N++;
@@ -1139,8 +1221,8 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   edm::Handle< reco::PFJetCollection > PFJet_Handle;
   try {iEvent.getByToken(_hltAK4PFRegJet_Tag, PFJet_Handle);}  catch (...) {;}
 
-  if(PFJet_Handle.isValid()){
-    
+  if(PFJet_Handle.isValid())
+  {  
     const reco::PFJetCollection PFJets = *(PFJet_Handle.product());
     for(size_t i=0; i<PFJets.size(); i++){
       
@@ -1186,17 +1268,17 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   //     this -> _hltPFRegCandJetReg_Phi.push_back(jetRegionRef->phi());*/
 
   //     for(unsigned int i_h=0;i_h<chargedHadrons.size();i_h++){
-  // 	_hltTauPFJetsRecoTauChargedHadronsReg_N++;
-  // 	_hltTauPFJetsRecoTauChargedHadronsReg_Pt.push_back(chargedHadrons[i_h].pt());
-  // 	_hltTauPFJetsRecoTauChargedHadronsReg_Eta.push_back(chargedHadrons[i_h].eta());	
-  // 	_hltTauPFJetsRecoTauChargedHadronsReg_Phi.push_back(chargedHadrons[i_h].phi());
+  //  _hltTauPFJetsRecoTauChargedHadronsReg_N++;
+  //  _hltTauPFJetsRecoTauChargedHadronsReg_Pt.push_back(chargedHadrons[i_h].pt());
+  //  _hltTauPFJetsRecoTauChargedHadronsReg_Eta.push_back(chargedHadrons[i_h].eta()); 
+  //  _hltTauPFJetsRecoTauChargedHadronsReg_Phi.push_back(chargedHadrons[i_h].phi());
   //     }
 
   //     for(unsigned int i_h=0;i_h<piZeros.size();i_h++){
-  // 	_hltPFTauPiZerosReg_N++;
-  // 	_hltPFTauPiZerosReg_Pt.push_back(piZeros[i_h].pt());
-  // 	_hltPFTauPiZerosReg_Eta.push_back(piZeros[i_h].eta());	
-  // 	_hltPFTauPiZerosReg_Phi.push_back(piZeros[i_h].phi());
+  //  _hltPFTauPiZerosReg_N++;
+  //  _hltPFTauPiZerosReg_Pt.push_back(piZeros[i_h].pt());
+  //  _hltPFTauPiZerosReg_Eta.push_back(piZeros[i_h].eta());  
+  //  _hltPFTauPiZerosReg_Phi.push_back(piZeros[i_h].phi());
   //     }   
 
   //   }
@@ -1206,8 +1288,8 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   edm::Handle< reco::PFTauCollection > PFTauSansRefReg_Handle;
   try {iEvent.getByToken(_hltPFTauSansRefReg_Tag, PFTauSansRefReg_Handle);}  catch (...) {;}
 
-  if(PFTauSansRefReg_Handle.isValid()){
-    
+  if(PFTauSansRefReg_Handle.isValid())
+  {
     const reco::PFTauCollection PFTaus = *(PFTauSansRefReg_Handle.product());
     for(size_t i=0; i<PFTaus.size(); i++){
       
@@ -1221,7 +1303,6 @@ void ZeroBias::analyze(const edm::Event& iEvent, const edm::EventSetup& eSetup)
   }
 
   this -> _tree -> Fill();
-
 }
 
 
@@ -1265,8 +1346,8 @@ Long64_t ZeroBias::FindTriggerBit(const vector<string> foundPaths, const vector<
 
       if (elemAllTriggers.find(toCheckTrigger) != std::string::npos) // equivalent to wildcard at the end or beginning of triggername 
       {
-	if(triggerResults->accept(indexOfPaths[j]))bit |= long(1) <<it;
-	break;
+        if(triggerResults->accept(indexOfPaths[j]))bit |= long(1) <<it;
+        break;
       }
     }
   }

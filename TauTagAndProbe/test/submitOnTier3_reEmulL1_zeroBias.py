@@ -32,7 +32,7 @@ def splitInBlocks (l, n):
 ###########
 
 njobs = 1000 # 150
-filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_4_0/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_6_0_pre1/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 list_filelists = []
 list_folders = []
@@ -109,9 +109,13 @@ if not isMC:
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022C_Fill8112-8113-8115_RAW_reEmuTPs")
     # list_njobs.append(50)
 
+    list_filelists.append(open(filedir+"/ZeroBias__Run2022D-v1__Run357802__RAW.txt"))
+    list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022D_Run357802_dataGT_MPtau__RAW")
+    list_njobs.append(75)
+
     # list_filelists.append(open(filedir+"/ZeroBias__Run2022D-v1__Run357802__RAW.txt"))
-    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022D_Run357802__RAW")
-    # list_njobs.append(8)
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022D_Run357802_L1Ntuple__RAW")
+    # list_njobs.append(75)
 
     # list_filelists.append(open(filedir+"/ZeroBias__Run2022Cpre-v1__RAW.txt"))
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022Cpre__RAW")
@@ -133,9 +137,9 @@ if not isMC:
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022F__RAW")
     # list_njobs.append(150)
 
-    list_filelists.append(open(filedir+"/test.txt"))
-    list_folders.append("/data_CMS/cms/motta/Run3preparation/test")
-    list_njobs.append(10)
+    # list_filelists.append(open(filedir+"/test.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/test")
+    # list_njobs.append(10)
 
 
     ## SingleMuon 13.6TeV
@@ -236,6 +240,7 @@ for i in range(len(list_folders)):
         jobfilelist.close()
 
         if not isMC:
+            # cmsRun = "cmsRun L1Ntuple_Tau_Test.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
             cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
             # cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
         else:

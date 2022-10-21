@@ -28,11 +28,12 @@ def splitInBlocks (l, n):
 ###########
 
 njobs = 2600
-filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_4_0/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_6_0_pre1/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 list_filelists = []
 list_folders = []
 list_njobs = []
+list_JSON = []
 
 # 100X signal RunII MC
 #filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIISpring18MiniAOD-NZSPU28to70_100X_upgrade2018_realistic_v10-v1_MINIAODSIM.txt")
@@ -140,31 +141,38 @@ list_njobs = []
 # list_folders.append("/data_CMS/cms/motta/Run3preparation/test")
 # list_njobs.append(2)
 
-# list_filelists.append(open(filedir+"/Muon__Run2022C-PromptReco-v1__MINIAOD.txt"))
-# list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022C-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
-# list_njobs.append(200)
-# Run2 = False; Run3 = True
-
-# list_filelists.append(open(filedir+"/Muon__Run2022D-PromptReco-v1__MINIAOD.txt"))
-# list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022D-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
-# list_njobs.append(100)
-# Run2 = False; Run3 = True
-
-list_filelists.append(open(filedir+"/Muon__Run2022E-PromptReco-v1__MINIAOD.txt"))
-list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022E-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
-list_njobs.append(350)
+list_filelists.append(open(filedir+"/Muon__Run2022C-PromptReco-v1__MINIAOD.txt"))
+list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022Cpre-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+list_njobs.append(250)
+list_JSON.append("./Cert_Collisions2022_eraC_355862_357482_Golden_pre.json")
 Run2 = False; Run3 = True
 
+# list_filelists.append(open(filedir+"/Muon__Run2022C-PromptReco-v1__MINIAOD.txt"))
+# list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022Cpost-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+# list_njobs.append(250)
+# list_JSON.append("./Cert_Collisions2022_eraC_355862_357482_Golden_post.json")
+# Run2 = False; Run3 = True
 
-# RUN3 GOLDEN JSON
-if Run3:
-    # JSONfile = "./Cert_Collisions2022_357079_357900_Golden.txt"
-    JSONfile = "./Cert_Collisions2022_359569_359812_Golden.txt"
+# list_filelists.append(open(filedir+"/Muon__Run2022D-PromptReco-v1-2__MINIAOD.txt"))
+# list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022D-PromptReco-v1-2__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+# list_njobs.append(150)
+# list_JSON.append("./Cert_Collisions2022_eraD_357538_357900_Golden.json")
+# Run2 = False; Run3 = True
 
-# RUN2 GOLDEN JSON
-if Run2: JSONfile = "./Cert_Collisions2018_323414-325175_Golden.txt"
+# list_filelists.append(open(filedir+"/Muon__Run2022E-PromptReco-v1__MINIAOD.txt"))
+# list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022E-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+# list_njobs.append(250)
+# list_JSON.append("./Cert_Collisions2022_eraE_359022_360331_Golden.json")
+# Run2 = False; Run3 = True
+
+list_filelists.append(open(filedir+"/Muon__Run2022F-PromptReco-v1__MINIAOD.txt"))
+list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022F-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+list_njobs.append(70)
+list_JSON.append("./Cert_Collisions2022_eraF_manual.json")
+Run2 = False; Run3 = True
 
 ###########
+
 
 os.system ('source /opt/exp_soft/cms/t3/t3setup')
 
@@ -172,7 +180,9 @@ for i in range(len(list_folders)):
     filelist = list_filelists[i]
     folder = list_folders[i]
     njobs = list_njobs[i]
-
+    JSONfile = list_JSON[i]
+    if Run2: JSONfile = "./Cert_Collisions2018_323414-325175_Golden.txt" # RUN2 GOLDEN JSON
+    
     os.system('mkdir -p ' + folder)
     files = [f.strip() for f in filelist]
     print("Input has" , len(files) , "files")

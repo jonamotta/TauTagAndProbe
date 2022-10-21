@@ -3,7 +3,7 @@
 <use name="DataFormats/PatCandidates"/>
 <use name="DataFormats/Candidate"/>
 
-<flags CPPDEFINES="CMSSW_VERSION=1240"/>
+<flags CPPDEFINES="CMSSW_VERSION=1260"/>
 
 <export>
   <lib   name="1"/>

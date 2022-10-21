@@ -4,15 +4,16 @@ Set of tools to evaluate tau trigger performance on T&amp;P
 ## Install instructions
 ```bash
 cmsrel CMSSW_12_4_0
-cd CMSSW_12_4_0/src
+cmsrel CMSSW_12_6_0_pre1
+cd CMSSW_12_6_0_pre1/src
 cmsenv
 git cms-init
 git remote add cms-l1t-offline git@github.com:cms-l1t-offline/cmssw.git
-git fetch cms-l1t-offline l1t-integration-CMSSW_12_4_0
-git cms-merge-topic -u cms-l1t-offline:l1t-integration-v129.0-CMSSW_12_4_0
+git fetch cms-l1t-offline l1t-integration-CMSSW_12_6_0_pre1
+git cms-merge-topic -u cms-l1t-offline:l1t-integration-v135-CMSSW_12_6_0_pre1
 git clone https://github.com/cms-l1t-offline/L1Trigger-L1TCalorimeter.git L1Trigger/L1TCalorimeter/data
 
-git clone git@github.com:jonamotta/TauTagAndProbe.git -b CMSSW_12_4_0-l1t-integration-v125.0 # package for the production of the starting NTuples
+git clone git@github.com:jonamotta/TauTagAndProbe.git -b CMSSW_12_6_0_pre1-l1t-integration-v135-CMSSW_12_6_0_pre1  # package for the production of the starting NTuples
 
 git cms-checkdeps -A -a
 
