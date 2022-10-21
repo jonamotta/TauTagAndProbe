@@ -3,7 +3,6 @@ Set of tools to evaluate tau trigger performance on T&amp;P
 
 ## Install instructions
 ```bash
-cmsrel CMSSW_12_4_0
 cmsrel CMSSW_12_6_0_pre1
 cd CMSSW_12_6_0_pre1/src
 cmsenv
