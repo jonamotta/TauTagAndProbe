@@ -141,11 +141,11 @@ list_JSON = []
 # list_folders.append("/data_CMS/cms/motta/Run3preparation/test")
 # list_njobs.append(2)
 
-list_filelists.append(open(filedir+"/Muon__Run2022C-PromptReco-v1__MINIAOD.txt"))
-list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022Cpre-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
-list_njobs.append(250)
-list_JSON.append("./Cert_Collisions2022_eraC_355862_357482_Golden_pre.json")
-Run2 = False; Run3 = True
+# list_filelists.append(open(filedir+"/Muon__Run2022C-PromptReco-v1__MINIAOD.txt"))
+# list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022Cpre-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+# list_njobs.append(250)
+# list_JSON.append("./Cert_Collisions2022_eraC_355862_357482_Golden_pre.json")
+# Run2 = False; Run3 = True
 
 # list_filelists.append(open(filedir+"/Muon__Run2022C-PromptReco-v1__MINIAOD.txt"))
 # list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022Cpost-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
@@ -167,8 +167,8 @@ Run2 = False; Run3 = True
 
 list_filelists.append(open(filedir+"/Muon__Run2022F-PromptReco-v1__MINIAOD.txt"))
 list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022F-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
-list_njobs.append(70)
-list_JSON.append("./Cert_Collisions2022_eraF_manual.json")
+list_njobs.append(450)
+list_JSON.append("./Cert_Collisions2022_eraF_360390_361580_Golden.json")
 Run2 = False; Run3 = True
 
 ###########

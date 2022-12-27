@@ -67,9 +67,13 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '124X_dataRun3_v9'
-    # process.GlobalTag.globaltag = '124X_dataRun3_HLT_frozen_v6'
-    process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
+    # process.GlobalTag.globaltag = '124X_dataRun3_v9'
+    process.GlobalTag.globaltag = '124X_dataRun3_Prompt_v10'
+    # process.GlobalTag.globaltag = '124X_dataRun2_v2'
+    
+    # process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
+    process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_allbx_cff')
+    
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
             # dummy for creation
@@ -79,8 +83,9 @@ if not isMC: # will use 80X
 
 else: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '124X_dataRun3_v9'
-    # process.GlobalTag.globaltag = '124X_dataRun3_HLT_frozen_v6'
+    # process.GlobalTag.globaltag = '124X_dataRun3_v9'
+    process.GlobalTag.globaltag = '124X_dataRun3_Prompt_v10'
+    # process.GlobalTag.globaltag = '124X_dataRun2_v2'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
@@ -212,7 +217,7 @@ process.caloStage2Digis.InputLabel = cms.InputTag('rawDataCollector')
 
 process.p = cms.Path (
     process.RawToDigi +
-    process.caloStage2Digis +
+    # process.caloStage2Digis +
     process.L1TReEmul +
     process.NtupleZeroBiasSeq
 )

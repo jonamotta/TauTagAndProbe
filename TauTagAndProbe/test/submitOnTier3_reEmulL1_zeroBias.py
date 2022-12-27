@@ -46,8 +46,8 @@ if not isMC:
 
     ## ZerioBias 13TeV
     # list_filelists.append(open(filedir+"/EphemeralZeroBias_2018D_Run323755.txt"))
-    # list_folders.append("/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755_reEmuTPs")
-    # list_filelists.append(open(filedir+"/EphemeralZeroBias_2018D_Run323775.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/EphemeralZeroBias_2018D_Run323755__RAW")
+    # list_njobs.append(361)
     
     ## ZerioBias 900GeV
     # list_filelists.append(open(filedir+"/ZeroBias1_Run2022A_Runs2bunches0p015lumi.txt"))
@@ -109,9 +109,9 @@ if not isMC:
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022C_Fill8112-8113-8115_RAW_reEmuTPs")
     # list_njobs.append(50)
 
-    list_filelists.append(open(filedir+"/ZeroBias__Run2022D-v1__Run357802__RAW.txt"))
-    list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022D_Run357802_dataGT_MPtau__RAW")
-    list_njobs.append(75)
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022D-v1__Run357802__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022D_Run357802_dataGT_MPtau_allBXbits__RAW")
+    # list_njobs.append(75)
 
     # list_filelists.append(open(filedir+"/ZeroBias__Run2022D-v1__Run357802__RAW.txt"))
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022D_Run357802_L1Ntuple__RAW")
@@ -136,6 +136,26 @@ if not isMC:
     # list_filelists.append(open(filedir+"/ZeroBias__Run2022F-v1__RAW.txt"))
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022F__RAW")
     # list_njobs.append(150)
+
+    list_filelists.append(open(filedir+"/ZeroBias__Run2022F-v1__Run360927__RAW.txt"))
+    list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022F_Run360927_L1NTuple__RAW")
+    list_njobs.append(900)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022F-v1__Run361197__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022F_Run361197__RAW")
+    # list_njobs.append(500)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022F-v1__Run361303__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022F_Run361303__RAW")
+    # list_njobs.append(500)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022F-v1__Run361443__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022F_Run361443__RAW")
+    # list_njobs.append(500)
+
+    # list_filelists.append(open(filedir+"/ZeroBias__Run2022F-v1__Run361512__RAW.txt"))
+    # list_folders.append("/data_CMS/cms/motta/Run3preparation/ZeroBias_Run2022F_Run361512__RAW")
+    # list_njobs.append(500)
 
     # list_filelists.append(open(filedir+"/test.txt"))
     # list_folders.append("/data_CMS/cms/motta/Run3preparation/test")
@@ -240,8 +260,8 @@ for i in range(len(list_folders)):
         jobfilelist.close()
 
         if not isMC:
-            # cmsRun = "cmsRun L1Ntuple_Tau_Test.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
-            cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
+            cmsRun = "cmsRun L1Ntuple_Tau_Test.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
+            # cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " >& " + outLogName
             # cmsRun = "cmsRun reEmulL1_ZeroBias.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " JSONfile="+JSONfile + " >& " + outLogName
         else:
             if not isNU: cmsRun = "cmsRun reEmulL1_MC_L1Only.py maxEvents=-1 inputFiles_load="+outListName + " outputFile="+outRootName + " isNU=0 >& " + outLogName
