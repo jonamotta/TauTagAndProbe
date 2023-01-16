@@ -12,7 +12,7 @@ git fetch cms-l1t-offline l1t-integration-CMSSW_13_0_0_pre2
 git cms-merge-topic -u cms-l1t-offline:l1t-integration-v141-CMSSW_13_0_0_pre2
 git clone https://github.com/cms-l1t-offline/L1Trigger-L1TCalorimeter.git L1Trigger/L1TCalorimeter/data
 
-git clone git@github.com:jonamotta/TauTagAndProbe.git -b CMSSW_13_0_0_pre2-l1t-integration-v141-CMSSW_13_0_0_pre2__fixed
+git clone git@github.com:jonamotta/TauTagAndProbe.git -b CMSSW_13_0_0_pre2-l1t-integration-v141-CMSSW_13_0_0_pre2
 
 git cms-checkdeps -A -a
 
