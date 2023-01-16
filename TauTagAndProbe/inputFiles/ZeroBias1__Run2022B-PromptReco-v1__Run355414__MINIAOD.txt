@@ -1,0 +1,1 @@
+root://cmsxrootd.fnal.gov//store/data/Run2022B/ZeroBias1/MINIAOD/PromptReco-v1/000/355/414/00000/37d97f42-c876-4b52-bd1e-e1d5ce3948c5.root

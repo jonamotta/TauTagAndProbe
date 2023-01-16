@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-print "Running on Data"
+print("Running on Data")
 
 
 HLTLIST = cms.VPSet(

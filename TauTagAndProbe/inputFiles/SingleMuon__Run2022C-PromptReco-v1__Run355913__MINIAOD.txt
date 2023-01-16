@@ -1,0 +1,4 @@
+/store/data/Run2022C/SingleMuon/MINIAOD/PromptReco-v1/000/355/913/00000/7cef3634-7eef-4c65-9884-014672e8f28e.root
+/store/data/Run2022C/SingleMuon/MINIAOD/PromptReco-v1/000/355/913/00000/9ae457cf-ee7d-477a-b4d0-31b4796c7aa1.root
+/store/data/Run2022C/SingleMuon/MINIAOD/PromptReco-v1/000/355/913/00000/3173af45-71b9-4bee-8696-307f1341420b.root
+/store/data/Run2022C/SingleMuon/MINIAOD/PromptReco-v1/000/355/913/00000/292773a8-e61f-4e08-83fc-43d3650521ea.root

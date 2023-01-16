@@ -1,7 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-
-#print "Running on data or mc"
+print("Running on data or mc")
 
 HLTLIST = cms.VPSet(
     #MuTau SingleL1
@@ -432,12 +431,12 @@ HLTLIST = cms.VPSet(
 )
 
 
-
-
-
 ZeroBias = cms.EDAnalyzer("ZeroBias",
     treeName = cms.string("ZeroBias"),
-    L1Tau = cms.InputTag("caloStage2Digis", "Tau"),
+    L1uGT = cms.InputTag("gtStage2Digis"),
+    L1uGTTau = cms.InputTag("gtStage2Digis", "Tau"),
+    # L1Tau = cms.InputTag("caloStage2Digis", "Tau"),
+    L1Tau = cms.InputTag("caloStage2Digis", "MP"),
     L1EmuTau = cms.InputTag("simCaloStage2Digis", "MP"),
     l1tJetCollection = cms.InputTag("caloStage2Digis","Jet"),
     l1tEmuJetCollection = cms.InputTag("simCaloStage2Digis","MP"),
@@ -445,7 +444,7 @@ ZeroBias = cms.EDAnalyzer("ZeroBias",
     L1EmuSumCollection = cms.InputTag("simCaloStage2Digis","MP"),
     L1EG = cms.InputTag("caloStage2Digis", "EGamma"),
     L1EmuEG = cms.InputTag("simCaloStage2Digis", "MP"),
-    L1Mu = cms.InputTag("hltGtStage2Digis"),
+    L1Mu = cms.InputTag("gmtStage2Digis","Muon"),
     L1EmuMu = cms.InputTag("simGtStage2Digis"),
     triggerList = HLTLIST,
     #triggerSet = cms.InputTag("slimmedPatTrigger"),
@@ -462,16 +461,14 @@ ZeroBias = cms.EDAnalyzer("ZeroBias",
     PFTauSansRefRegCollection = cms.InputTag("hltPFTausSansRefReg", "", "MYHLT"),
     PFJetRegionCollection = cms.InputTag("hltTauPFJets08RegionReg", "jets", "MYHLT"),
     PFJetChargedHadronAssociation = cms.InputTag("hltTauPFJetsRecoTauChargedHadronsReg", "", "MYHLT"),
-    JetPiZeroAssociation = cms.InputTag("hltPFTauPiZerosReg", "", "MYHLT")
+    JetPiZeroAssociation = cms.InputTag("hltPFTauPiZerosReg", "", "MYHLT"),
+    PuSummaryInfo = cms.InputTag("addPileupInfo")
 )
 
 
 NtupleZeroBiasSeq = cms.Sequence(
     ZeroBias
 )
-
-
-
 
 
 patTriggerUnpacker = cms.EDProducer("PATTriggerObjectStandAloneUnpacker",

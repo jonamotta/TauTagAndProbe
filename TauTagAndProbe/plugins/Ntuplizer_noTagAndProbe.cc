@@ -32,7 +32,7 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 
 #include "FWCore/Framework/interface/EventSetup.h"
-#include "JetMETCorrections/Objects/interface/JetCorrector.h"
+#include "JetMETCorrections/JetCorrector/interface/JetCorrector.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 #include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
@@ -578,7 +578,7 @@ void Ntuplizer_noTagAndProbe::analyze(const edm::Event& iEvent, const edm::Event
       if(tauHandle->size()>0)
 	{
 	  const pat::TauRef tau = (*tauHandle)[0];
-	  deltaR(*tau, *bx0TauIt);
+	  dR = deltaR(*tau, *bx0TauIt);
 	}
       const l1t::Tau& l1tTau = *bx0TauIt;
 

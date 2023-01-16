@@ -4,10 +4,11 @@ import FWCore.ParameterSet.Config as cms
 from Configuration.StandardSequences.Eras import eras
 
 isMC = False
-#isMC = False
 
-#process = cms.Process("ZeroBias",eras.Run2_2016)
-process = cms.Process("ZeroBias",eras.Run2_2017)
+# process = cms.Process("ZeroBias",eras.Run2_2016)
+# process = cms.Process("ZeroBias",eras.Run2_2017)
+# process = cms.Process("ZeroBias",eras.Run2_2018)
+process = cms.Process("ZeroBias",eras.Run3)
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
@@ -66,37 +67,30 @@ import FWCore.Utilities.FileUtils as FileUtils
 
 if not isMC: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '92X_dataRun2_HLT_v7'
-    #process.GlobalTag.globaltag = '80X_dataRun2_Prompt_v8'
-    process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
+    # process.GlobalTag.globaltag = '124X_dataRun3_v9'
+    process.GlobalTag.globaltag = '124X_dataRun3_Prompt_v10'
+    # process.GlobalTag.globaltag = '124X_dataRun2_v2'
+    
+    # process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
+    process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_allbx_cff')
+    
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
-            #'file:BCB1EC0B-5E26-E611-8240-02163E0145B8.root'
-            '/store/data/Run2017C/ZeroBias/RAW/v1/000/300/806/00000/02C685A4-567D-E711-9C28-02163E0127B8.root',
-            #'/store/data/Run2016E/ZeroBias/RAW/v2/000/277/420/00000/02E63363-A052-E611-8FD7-FA163E249562.root'
-            #'/store/data/Run2016E/ZeroBias/RAW/v2/000/276/831/00000/04145A1E-A54B-E611-A0C6-FA163E6A5A26.root'
-            #'/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/BCB1EC0B-5E26-E611-8240-02163E0145B8.root'
-            #'/store/data/Run2016B/SingleMuon/MINIAOD/PromptReco-v2/000/274/199/00000/7005DB70-4C28-E611-8628-02163E0144DD.root',
+            # dummy for creation
+            '/store/data/Run2018D/EphemeralZeroBias1/RAW/v1/000/323/755/00000/02506E54-CE47-A649-9F80-117E978DC69E.root'
         ),
     )
 
 else: # will use 80X
     from Configuration.AlCa.autoCond import autoCond
-    process.GlobalTag.globaltag = '92X_upgrade2017_TSG_For90XSamples_V2'#for VBF Hinv
-    #process.GlobalTag.globaltag = '90X_upgrade2017_TSG_Hcal_V3'#for VBF Hinv
-    #process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_v14'#for VBF HTT
-    #process.GlobalTag.globaltag = 'auto:run2_mc'
-    #process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_v6' #MC 25 ns miniAODv2
-    #process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_v3' #MC 25 ns miniAODv2
-    #process.GlobalTag.globaltag = '80X_mcRun2_asymptotic_2016_miniAODv2' #MC 25 ns miniAODv2
+    # process.GlobalTag.globaltag = '124X_dataRun3_v9'
+    process.GlobalTag.globaltag = '124X_dataRun3_Prompt_v10'
+    # process.GlobalTag.globaltag = '124X_dataRun2_v2'
     process.load('TauTagAndProbe.TauTagAndProbe.zeroBias_cff')
     process.source = cms.Source("PoolSource",
         fileNames = cms.untracked.vstring(
-            #'file:BCB1EC0B-5E26-E611-8240-02163E0145B8.root'
-            'file:0A3E7062-D365-E611-BCF4-001EC9AF0377.root'
-            #'/store/mc/RunIISpring16DR80/GluGluHToTauTau_M125_13TeV_powheg_pythia8/GEN-SIM-RAW/FlatPU20to70HcalNZSRAW_withHLT_80X_mcRun2_asymptotic_v14-v1/50000/0A3E7062-D365-E611-BCF4-001EC9AF0377.root'
-            #'/store/data/Run2016B/SingleMuon/RAW/v2/000/274/199/00000/BCB1EC0B-5E26-E611-8240-02163E0145B8.root'
-            #'/store/data/Run2016B/SingleMuon/MINIAOD/PromptReco-v2/000/274/199/00000/7005DB70-4C28-E611-8628-02163E0144DD.root',
+            # dummy for creation
+            '/store/data/Run2018D/EphemeralZeroBias1/RAW/v1/000/323/755/00000/02506E54-CE47-A649-9F80-117E978DC69E.root'
         ),
     )
 
@@ -105,19 +99,93 @@ process.schedule = cms.Schedule()
 ## L1 emulation stuff
 
 if not isMC:
-    from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAW 
+    ## re-emulate starting from RAW information (here we do not re-emulate also the TPs)
+    from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAW
     process = L1TReEmulFromRAW(process)
+
+    ## re-emulate starting from TPs (here we re-emulate also the TPs)
+    # from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAWsimHcalTP
+    # process = L1TReEmulFromRAWsimHcalTP(process)
+
 else:
+    ## re-emulate starting from RAW information (here we do not re-emulate also the TPs)
     from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAW
-    process = L1TReEmulMCFromRAW(process) 
+    process = L1TReEmulMCFromRAW(process)
+    
+    ## re-emulate starting from TPs (here we re-emulate also the TPs)
+    # from L1Trigger.Configuration.customiseReEmul import L1TReEmulMCFromRAWSimHcalTP
+    # process = L1TReEmulMCFromRAWSimHcalTP(process)
+
     from L1Trigger.Configuration.customiseUtils import L1TTurnOffUnpackStage2GtGmtAndCalo 
     process = L1TTurnOffUnpackStage2GtGmtAndCalo(process)
-    #from L1Trigger.Configuration.customiseReEmul import L1TReEmulFromRAWsimTP
-    #process = L1TReEmulFromRAWsimTP(process)
 
-process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2017_v1_10_mean_inconsistent_cfi")
-#process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2017_v1_4_cfi")
-#process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2016_v3_2_cfi")
+
+# 2018 full caloparams
+# process.load("L1Trigger.L1TCalorimeter.caloParams_2018_v1_4_cfi")
+
+# 2018 LUTs currently ONLINE
+#process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_1_cfi")
+
+# 2022 LUTs new and to be waited for online
+# process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_2_cfi")
+
+# 2022 full LUTs as online
+process.load("L1Trigger.L1TCalorimeter.caloParams_2022_v0_4_cfi")
+
+############################
+# PFA1' Filter
+# --> HCAL pu mitigation
+
+# process.load("SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff")
+
+# process.simHcalTriggerPrimitiveDigis.overrideDBweightsAndFilterHB = cms.bool(True)
+# process.simHcalTriggerPrimitiveDigis.overrideDBweightsAndFilterHE = cms.bool(True)
+
+# process.HcalTPGCoderULUT.overrideDBweightsAndFilterHB = cms.bool(True)
+# process.HcalTPGCoderULUT.overrideDBweightsAndFilterHE = cms.bool(True)
+
+# process.simHcalTriggerPrimitiveDigis.numberOfFilterPresamplesHBQIE11 = 1
+# process.simHcalTriggerPrimitiveDigis.numberOfFilterPresamplesHEQIE11 = 1
+# process.simHcalTriggerPrimitiveDigis.weightsQIE11 = {
+#     "ieta1" :  [-0.47, 1.0],
+#     "ieta2" :  [-0.47, 1.0],
+#     "ieta3" :  [-0.47, 1.0],
+#     "ieta4" :  [-0.47, 1.0],
+#     "ieta5" :  [-0.47, 1.0],
+#     "ieta6" :  [-0.47, 1.0],
+#     "ieta7" :  [-0.47, 1.0],
+#     "ieta8" :  [-0.47, 1.0],
+#     "ieta9" :  [-0.47, 1.0],
+#     "ieta10" : [-0.47, 1.0],
+#     "ieta11" : [-0.47, 1.0],
+#     "ieta12" : [-0.47, 1.0],
+#     "ieta13" : [-0.47, 1.0],
+#     "ieta14" : [-0.47, 1.0],
+#     "ieta15" : [-0.47, 1.0],
+#     "ieta16" : [-0.47, 1.0],
+#     "ieta17" : [-0.47, 1.0],
+#     "ieta18" : [-0.47, 1.0],
+#     "ieta19" : [-0.47, 1.0],
+#     "ieta20" : [-0.47, 1.0],
+#     "ieta21" : [-0.43, 1.0],
+#     "ieta22" : [-0.43, 1.0],
+#     "ieta23" : [-0.43, 1.0],
+#     "ieta24" : [-0.43, 1.0],
+#     "ieta25" : [-0.43, 1.0],
+#     "ieta26" : [-0.43, 1.0],
+#     "ieta27" : [-0.43, 1.0],
+#     "ieta28" : [-0.43, 1.0]
+# }
+
+# process.HcalTPGCoderULUT.contain1TSHB = True
+# process.HcalTPGCoderULUT.contain1TSHE = True
+
+# process.HcalTPGCoderULUT.containPhaseNSHB = 0.0 # For Run2 2018 Data
+# process.HcalTPGCoderULUT.containPhaseNSHE = 0.0 # For Run2 2018 Data
+
+############################
+
+
 
 #### handling of cms line options for tier3 submission
 #### the following are dummy defaults, so that one can normally use the config changing file list by hand etc.
@@ -125,7 +193,7 @@ process.load("L1Trigger.L1TCalorimeter.caloStage2Params_2017_v1_10_mean_inconsis
 
 
 if options.JSONfile:
-    print "Using JSON: " , options.JSONfile
+    print("Using JSON: " , options.JSONfile)
     process.source.lumisToProcess = LumiList.LumiList(filename = options.JSONfile).getVLuminosityBlockRange()
 
 if options.inputFiles:
@@ -149,7 +217,7 @@ process.caloStage2Digis.InputLabel = cms.InputTag('rawDataCollector')
 
 process.p = cms.Path (
     process.RawToDigi +
-    process.caloStage2Digis +
+    # process.caloStage2Digis +
     process.L1TReEmul +
     process.NtupleZeroBiasSeq
 )

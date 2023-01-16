@@ -1,0 +1,10 @@
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/38585850-38db-4222-961f-a9ec68e804b9.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/639fcc23-dd22-4da3-9b5e-ec4ce981d680.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540001/97091340-1837-4380-9cb2-a89885d0a001.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/174dc64c-f209-428a-9316-80c7be4a685c.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/f3a1cc21-d20a-46f4-ab2e-4a359100a311.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/c91c0b21-d875-459e-8d79-1cdb454f40ef.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/5b97dfe0-af78-45ea-8add-f0d9b6616e28.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/96fe4815-c88b-425d-9d82-054ce2d3bc90.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/bfe90eda-3791-4fec-905c-31e2d13679b9.root
+/store/mc/Run3Summer21DRPremix/SingleNeutrino_Pt-2To20-gun/GEN-SIM-DIGI-RAW/SNB_120X_mcRun3_2021_realistic_v6-v2/2540000/368b6c11-2a4a-425f-a4db-455f624aa3ea.root
