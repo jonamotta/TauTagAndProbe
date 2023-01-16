@@ -28,7 +28,7 @@ def splitInBlocks (l, n):
 ###########
 
 njobs = 2600
-filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_6_0_pre1/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_13_0_0_pre2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 list_filelists = []
 list_folders = []
@@ -167,8 +167,14 @@ list_JSON = []
 
 list_filelists.append(open(filedir+"/Muon__Run2022F-PromptReco-v1__MINIAOD.txt"))
 list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022F-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
-list_njobs.append(450)
-list_JSON.append("./Cert_Collisions2022_eraF_360390_361580_Golden.json")
+list_njobs.append(500)
+list_JSON.append("./Cert_Collisions2022_eraF_360390_362167_Golden.json")
+Run2 = False; Run3 = True
+
+list_filelists.append(open(filedir+"/Muon__Run2022G-PromptReco-v1__MINIAOD.txt"))
+list_folders.append("/data_CMS/cms/motta/Run3preparation/Muon__Run2022G-PromptReco-v1__MINIAOD__GoldenJSON__WMassCutTrue__ZMassCutTrue")
+list_njobs.append(100)
+list_JSON.append("./Cert_Collisions2022_eraG_362433_362760_Golden.json")
 Run2 = False; Run3 = True
 
 ###########

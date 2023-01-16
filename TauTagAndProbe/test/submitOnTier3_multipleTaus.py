@@ -28,7 +28,7 @@ def splitInBlocks (l, n):
 ###########
 
 njobs = 2600
-filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_3_0_pre6/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_13_0_0_pre2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 # 100X signal RunII MC
 #filelist = open(filedir+"/VBFHToTauTau_M125_13TeV_powheg_pythia8__RunIISpring18MiniAOD-NZSPU28to70_100X_upgrade2018_realistic_v10-v1_MINIAODSIM.txt")

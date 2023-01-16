@@ -32,7 +32,7 @@ def splitInBlocks (l, n):
 ###########
 
 njobs = 1000 # 150
-filedir="/home/llr/cms/motta/Run3preparation/CMSSW_12_6_0_pre1/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
+filedir="/home/llr/cms/motta/Run3preparation/CMSSW_13_0_0_pre2/src/TauTagAndProbe/TauTagAndProbe/inputFiles"
 
 list_filelists = []
 list_folders = []
