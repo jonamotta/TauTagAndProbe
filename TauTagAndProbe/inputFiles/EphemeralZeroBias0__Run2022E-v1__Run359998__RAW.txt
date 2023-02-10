@@ -1,0 +1,9 @@
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/0f6f6ec0-bde5-409f-ad24-a41fb98cbc23.root
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/abb0f831-4ecf-4895-ab9f-cbb82a747636.root
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/20668e7f-74ec-4123-a73f-9f8a3c96ee9c.root
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/8901c08b-fa77-49aa-94c2-fdb8a2fc0bb2.root
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/6966c625-970d-4ae0-a86e-9c5567f9688b.root
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/f57b1abe-13de-4dca-800c-b77230d7090b.root
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/68d7e74e-4942-4446-b613-ac33a136f362.root
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/8eed6d68-fea3-4111-a51d-174c0a3e8043.root
+/store/data/Run2022E/EphemeralZeroBias0/RAW/v1/000/359/998/00000/62fec218-2729-469d-8784-9f8af1547c24.root
